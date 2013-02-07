@@ -186,4 +186,6 @@ Remarks
 
 The above functions all automatically detect the appropriate interface and work with both real and complex data types, passing input arguments to the proper backend routine.
 
+To control the seed values governing all random number generation, use :func:`pymatrixid.rand`.
+
 All backend functions can be accessed via the :mod:`pymatrixid.backend` module, which wraps the Fortran functions directly, perhaps with some minor simplification.

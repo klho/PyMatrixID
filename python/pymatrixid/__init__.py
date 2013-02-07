@@ -26,6 +26,36 @@ DTYPE_ERROR   =    TypeError("invalid data type")
 NARG_ERROR    =   ValueError("unknown input specification")
 RETCODE_ERROR = RuntimeError("nonzero return code")
 
+def rand(*args):
+  """
+  Generate standard uniform pseudorandom numbers via a very efficient lagged
+  Fibonacci method.
+
+  This routine is used for all random number generation in this package and can
+  affect ID and SVD results.
+
+  Several call signatures are available:
+
+  - If no arguments are given, then the seed values are reset to their original
+    values.
+
+  - If an integer `n` is given as input, then an array of `n` pseudorandom
+    numbers are returned.
+
+  - If an array `s` of 55 values are given as input, then the seed values are
+    set to `s`.
+
+  For details, see :func:`backend.id_srand`, :func:`backend.id_srandi`, and
+  :func:`backend.id_srando`.
+  """
+  if   len(args) == 0: backend.id_srando()
+  elif len(args) == 1:
+    x = np.array(args[0], copy=False)
+    if   x.size ==  1: return backend.id_srand (x)
+    elif x.size == 55:        backend.id_srandi(x)
+    else: raise ValueError("invalid input size")
+  else: raise NARG_ERROR
+
 def id(*args, **kwargs):
   """
   Compute ID of a matrix.

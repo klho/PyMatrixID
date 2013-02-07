@@ -23,6 +23,43 @@ import id_dist as _id
 import numpy as np
 
 #-------------------------------------------------------------------------------
+# id_rand.f
+#-------------------------------------------------------------------------------
+
+def id_srand(n):
+  """
+  Generate standard uniform pseudorandom numbers via a very efficient lagged
+  Fibonacci method.
+
+  :param n:
+    Number of pseudorandom numbers to generate.
+  :type n: int
+
+  :return:
+    Pseudorandom numbers.
+  :rtype: :class:`numpy.ndarray`
+  """
+  return _id.id_srand(n)
+
+def id_srandi(t):
+  """
+  Initialize seed values for :func:`id_srand` (any appropriately random numbers
+  will do).
+
+  :param t:
+    Array of 55 seed values.
+  :type t: :class:`numpy.ndarray`
+  """
+  t = np.array(t, copy=False, dtype='float64')
+  _id.id_srandi(t)
+
+def id_srando():
+  """
+  Reset seed values to their original values.
+  """
+  _id.id_srando()
+
+#-------------------------------------------------------------------------------
 # idd_frm.f
 #-------------------------------------------------------------------------------
 
