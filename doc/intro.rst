@@ -19,9 +19,9 @@ We advise the user to consult also the documentation for the ID package, which i
 Licensing and availability
 --------------------------
 
-PyMatrixID is freely available under the `GNU GPL <http://www.gnu.org/licenses/gpl.html>`_ and can be downloaded at https://github.com/klho/PyMatrixID. To request alternate licenses, please contact the author.
+PyMatrixID is freely available under the `BSD license <http://opensource.org/licenses/BSD-3-Clause>`_ and can be downloaded at https://github.com/klho/PyMatrixID. To request alternate licenses, please contact the author.
 
-PyMatrixID also distributes the ID software package, which is released under the modified BSD license.
+PyMatrixID also distributes the ID software package, which is likewise released under the BSD license.
 
 References
 ----------

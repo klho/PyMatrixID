@@ -9,4 +9,4 @@ An interpolative decomposition (ID) of a matrix is a factorization as a product 
 
 The ID software package by Martinsson, Rokhlin, Shkolnisky, and Tygert is a Fortran library to compute IDs using various algorithms, including the deterministic rank-revealing QR approach and more recent randomized methods. PyMatrixID is a Python wrapper for this package that exposes its functionality in a more convenient manner. Note that PyMatrixID does not add any functionality beyond that of organizing a simpler and more consistent interface.
 
-PyMatrixID is freely available under the GNU GPLv3; for alternate licenses, please contact the author.
+PyMatrixID is freely available under the BSD license; for alternate licenses, please contact the author.
