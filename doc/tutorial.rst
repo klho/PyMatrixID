@@ -20,7 +20,7 @@ The first step is to import :mod:`pymatrixid` by issuing the command::
 at the Python prompt. This should work if you are in the ``python`` directory; otherwise, you may have to first type something like:
 
 >>> import sys
->>> sys.path.append(/path/to/hypoct/python/)
+>>> sys.path.append(/path/to/pymatrixid/python/)
 
 in order to tell Python where to look.
 
@@ -112,6 +112,12 @@ This can also be constructed directly using::
 >>> C = pymatrixid.reconid(B, idx, proj)
 
 without having to first compute :math:`P`.
+
+It is also possible to reconstruct the ID explicitly using::
+
+  B = A[:,idx[:k]-1]
+  P = np.hstack([np.eye(k), proj])
+  C = np.dot(B, P)[:,np.argsort(idx)]
 
 Computing an SVD
 ----------------

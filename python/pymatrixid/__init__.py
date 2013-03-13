@@ -22,9 +22,9 @@ Python module for interfacing with `id_dist`.
 from pymatrixid import backend
 import numpy as np
 
-DTYPE_ERROR   =    TypeError("invalid data type")
-NARG_ERROR    =   ValueError("unknown input specification")
-RETCODE_ERROR = RuntimeError("nonzero return code")
+_DTYPE_ERROR   =    TypeError("invalid data type")
+_NARG_ERROR    =   ValueError("unknown input specification")
+_RETCODE_ERROR = RuntimeError("nonzero return code")
 
 def rand(*args):
   """
@@ -54,7 +54,7 @@ def rand(*args):
     if   x.size ==  1: return backend.id_srand (x)
     elif x.size == 55:        backend.id_srandi(x)
     else: raise ValueError("invalid input size")
-  else: raise NARG_ERROR
+  else: raise _NARG_ERROR
 
 def id(*args, **kwargs):
   """
@@ -95,6 +95,18 @@ def id(*args, **kwargs):
 
   For calls specifying a rank, outputs include just the last two above.
 
+  A matrix `A` with ID, e.g.::
+
+    k, idx, proj = id(A, eps)
+
+  can be reconstructed as::
+
+    B = A[:,idx[:k]-1]
+    P = numpy.hstack([numpy.eye(k), proj])
+    approx = numpy.dot(B, P)[:,numpy.argsort(idx)]
+
+  or via the routines :func:`reconid`, :func:`reconint`, and :func:`reconskel`.
+
   This function automatically detects the form of the call signature and the
   matrix data type, and passes the inputs to the proper backend. For details,
   see :func:`backend.iddp_id`, :func:`backend.iddp_aid`
@@ -108,7 +120,7 @@ def id(*args, **kwargs):
     A, eps_or_k = args
     if   A.dtype ==    'float64': prefix += 'd'
     elif A.dtype == 'complex128': prefix += 'z'
-    else: raise DTYPE_ERROR
+    else: raise _DTYPE_ERROR
     if eps_or_k < 1:
       eps = eps_or_k
       prefix += 'p'
@@ -125,7 +137,7 @@ def id(*args, **kwargs):
     dtype = matveca(0).dtype
     if   dtype ==    'float64': prefix += 'd'
     elif dtype == 'complex128': prefix += 'z'
-    else: raise DTYPE_ERROR
+    else: raise _DTYPE_ERROR
     if eps_or_k < 1:
       eps = eps_or_k
       prefix += 'p'
@@ -135,13 +147,22 @@ def id(*args, **kwargs):
       prefix += 'r'
       argstr  = 'm, n, matveca, k'
     suffix = 'r'
-  else: raise NARG_ERROR
+  else: raise _NARG_ERROR
   s = 'backend.id%s_%sid(%s)' % (prefix, suffix, argstr)
   return eval(s)
 
 def reconid(B, idx, proj):
   """
   Reconstruct matrix from ID.
+
+  A matrix `A` with skeleton matrix `B` and ID indices and coefficients `idx`
+  and `proj`, respectively, can be reconstructed as::
+
+    k = B.shape[1]
+    P = numpy.hstack([numpy.eye(k), proj])[:,numpy.argsort(idx)]
+    approx = numpy.dot(B, P)
+
+  See also :func:`reconint` and :func:`reconskel`.
 
   This function automatically detects the matrix data type and calls the
   appropriate backend. For details, see :func:`backend.idd_reconid` and
@@ -163,11 +184,17 @@ def reconid(B, idx, proj):
   """
   if   B.dtype ==    'float64': return backend.idd_reconid(B, idx, proj)
   elif B.dtype == 'complex128': return backend.idz_reconid(B, idx, proj)
-  else: raise DTYPE_ERROR
+  else: raise _DTYPE_ERROR
 
 def reconint(idx, proj):
   """
   Reconstruct interpolation matrix from ID.
+
+  The interpolation matrix can be reconstructed from the ID indices and
+  coefficients `idx` and `proj`, respectively, as::
+
+    k = proj.shape[0]
+    P = numpy.hstack([numpy.eye(k), proj])[:,numpy.argsort(idx)]
 
   This function automatically detects the matrix data type and calls the
   appropriate backend. For details, see :func:`backend.idd_reconint` and
@@ -186,11 +213,16 @@ def reconint(idx, proj):
   """
   if   proj.dtype ==    'float64': return backend.idd_reconint(idx, proj)
   elif proj.dtype == 'complex128': return backend.idz_reconint(idx, proj)
-  else: raise DTYPE_ERROR
+  else: raise _DTYPE_ERROR
 
 def reconskel(A, k, idx):
   """
   Reconstruct skeleton matrix from ID.
+
+  The skeleton matrix can be reconstructed from the original matrix `A`, its
+  rank `k`, and the ID indices `idx` as::
+
+    B = A[:,idx[:k]-1]
 
   This function automatically detects the matrix data type and calls the
   appropriate backend. For details, see :func:`backend.idd_copycols` and
@@ -212,7 +244,7 @@ def reconskel(A, k, idx):
   """
   if   A.dtype ==    'float64': return backend.idd_copycols(A, k, idx)
   elif A.dtype == 'complex128': return backend.idz_copycols(A, k, idx)
-  else: raise DTYPE_ERROR
+  else: raise _DTYPE_ERROR
 
 def id2svd(B, idx, proj):
   """
@@ -244,7 +276,7 @@ def id2svd(B, idx, proj):
   """
   if   B.dtype ==    'float64': U, V, S = backend.idd_id2svd(B, idx, proj)
   elif B.dtype == 'complex128': U, V, S = backend.idz_id2svd(B, idx, proj)
-  else: raise DTYPE_ERROR
+  else: raise _DTYPE_ERROR
   return U, S, V
 
 def snorm(m, n, matvec, matveca, its=20):
@@ -284,7 +316,7 @@ def snorm(m, n, matvec, matveca, its=20):
     return backend.idd_snorm(m, n, matveca, matvec, its=its)
   elif dtype == 'complex128':
     return backend.idz_snorm(m, n, matveca, matvec, its=its)
-  else: raise DTYPE_ERROR
+  else: raise _DTYPE_ERROR
 
 def diffsnorm(m, n, matvec1, matvec2, matveca1, matveca2, its=20):
   """
@@ -336,7 +368,7 @@ def diffsnorm(m, n, matvec1, matvec2, matveca1, matveca2, its=20):
   elif dtype == 'complex128':
     return backend.idz_diffsnorm(m, n, matveca1, matveca2, matvec1, matvec2,
                                  its=its)
-  else: raise DTYPE_ERROR
+  else: raise _DTYPE_ERROR
 
 def svd(*args, **kwargs):
   """
@@ -394,7 +426,7 @@ def svd(*args, **kwargs):
     A, eps_or_k = args
     if   A.dtype ==    'float64': prefix += 'd'
     elif A.dtype == 'complex128': prefix += 'z'
-    else: raise DTYPE_ERROR
+    else: raise _DTYPE_ERROR
     if eps_or_k < 1:
       eps = eps_or_k
       prefix += 'p'
@@ -411,7 +443,7 @@ def svd(*args, **kwargs):
     dtype = matveca(0).dtype
     if   dtype ==    'float64': prefix += 'd'
     elif dtype == 'complex128': prefix += 'z'
-    else: raise DTYPE_ERROR
+    else: raise _DTYPE_ERROR
     if eps_or_k < 1:
       eps = eps_or_k
       prefix += 'p'
@@ -421,7 +453,7 @@ def svd(*args, **kwargs):
       prefix += 'r'
       argstr  = 'm, n, matveca, matvec, k'
     suffix = 'r'
-  else: raise NARG_ERROR
+  else: raise _NARG_ERROR
   s = 'backend.id%s_%ssvd(%s)' % (prefix, suffix, argstr)
   U, V, S = eval(s)
   return U, S, V
@@ -461,7 +493,7 @@ def estrank(*args):
     A, eps = args
     if   A.dtype ==    'float64': prefix = 'd'
     elif A.dtype == 'complex128': prefix = 'z'
-    else: raise DTYPE_ERROR
+    else: raise _DTYPE_ERROR
     suffix = 'estrank'
     argstr = 'eps, A'
   elif len(args) == 4:
@@ -469,9 +501,9 @@ def estrank(*args):
     dtype = matveca(0).dtype
     if   dtype ==    'float64': prefix = 'd'
     elif dtype == 'complex128': prefix = 'z'
-    else: raise DTYPE_ERROR
+    else: raise _DTYPE_ERROR
     suffix = 'findrank'
     argstr  = 'eps, m, n, matveca'
-  else: raise NARG_ERROR
+  else: raise _NARG_ERROR
   s = 'backend.id%s_%s(%s)' % (prefix, suffix, argstr)
   return eval(s)
