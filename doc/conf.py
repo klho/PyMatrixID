@@ -248,5 +248,6 @@ texinfo_documents = [
 #intersphinx_mapping = {'http://docs.python.org/': None}
 intersphinx_mapping = {
        'numpy': ('http://docs.scipy.org/doc/numpy/', None),
-      'python': ('http://docs.python.org/', None)
+      'python': ('http://docs.python.org/', None),
+       'scipy': ('http://docs.scipy.org/doc/scipy/reference/', None)
 }

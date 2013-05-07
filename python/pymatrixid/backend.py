@@ -34,6 +34,8 @@ Direct wrappers for Fortran `id_dist` backend.
 import id_dist as _id
 import numpy as np
 
+_RETCODE_ERROR = RuntimeError("nonzero return code")
+
 #-------------------------------------------------------------------------------
 # id_rand.f
 #-------------------------------------------------------------------------------
@@ -62,7 +64,7 @@ def id_srandi(t):
     Array of 55 seed values.
   :type t: :class:`numpy.ndarray`
   """
-  t = np.array(t, copy=False, dtype='float64')
+  t = np.asfortranarray(t)
   _id.id_srandi(t)
 
 def id_srando():
@@ -191,11 +193,10 @@ def iddp_id(eps, A):
     Interpolation coefficients.
   :rtype: :class:`numpy.ndarray`
   """
-  A = np.array(A, copy=True, dtype='float64', order='F')
+  A = np.asfortranarray(A)
   k, idx, rnorms = _id.iddp_id(eps, A)
   n = A.shape[1]
-  A = A.T.reshape(A.size)
-  proj = A[:k*(n-k)].reshape((k, n-k), order='F')
+  proj = A.T.ravel()[:k*(n-k)].reshape((k, n-k), order='F')
   return k, idx, proj
 
 def iddr_id(A, k):
@@ -216,11 +217,10 @@ def iddr_id(A, k):
     Interpolation coefficients.
   :rtype: :class:`numpy.ndarray`
   """
-  A = np.array(A, copy=True, dtype='float64', order='F')
+  A = np.asfortranarray(A)
   idx, rnorms = _id.iddr_id(A, k)
   n = A.shape[1]
-  A = A.T.reshape(A.size)
-  proj = A[:k*(n-k)].reshape((k, n-k), order='F')
+  proj = A.T.ravel()[:k*(n-k)].reshape((k, n-k), order='F')
   return idx, proj
 
 def idd_reconid(B, idx, proj):
@@ -241,12 +241,9 @@ def idd_reconid(B, idx, proj):
     Reconstructed matrix.
   :rtype: :class:`numpy.ndarray`
   """
-  B = np.array(B, copy=False, dtype='float64', order='F')
-  if proj.size > 0:
-    return _id.idd_reconid(B, idx, proj)
-  else:
-    P = idd_reconint(idx, proj)
-    return np.dot(B, P)
+  B = np.asfortranarray(B)
+  if proj.size > 0: return _id.idd_reconid(B, idx, proj)
+  else:             return B[:,np.argsort(idx)]
 
 def idd_reconint(idx, proj):
   """
@@ -283,7 +280,7 @@ def idd_copycols(A, k, idx):
     Skeleton matrix.
   :rtype: :class:`numpy.ndarray`
   """
-  A = np.array(A, copy=False, dtype='float64', order='F')
+  A = np.asfortranarray(A)
   return _id.idd_copycols(A, k, idx)
 
 #-------------------------------------------------------------------------------
@@ -314,9 +311,9 @@ def idd_id2svd(B, idx, proj):
     Singular values.
   :rtype: :class:`numpy.ndarray`
   """
-  B = np.array(B, copy=False, dtype='float64', order='F')
+  B = np.asfortranarray(B)
   U, V, S, ier = _id.idd_id2svd(B, idx, proj)
-  if ier != 0: raise RETCODE_ERROR
+  if ier != 0: raise _RETCODE_ERROR
   return U, V, S
 
 #-------------------------------------------------------------------------------
@@ -420,9 +417,9 @@ def iddr_svd(A, k):
     Singular values.
   :rtype: :class:`numpy.ndarray`
   """
-  A = np.array(A, copy=True, dtype='float64', order='F')
+  A = np.asfortranarray(A)
   U, V, S, ier = _id.iddr_svd(A, k)
-  if ier != 0: raise RETCODE_ERROR
+  if ier != 0: raise _RETCODE_ERROR
   return U, V, S
 
 def iddp_svd(eps, A):
@@ -446,10 +443,10 @@ def iddp_svd(eps, A):
     Singular values.
   :rtype: :class:`numpy.ndarray`
   """
-  A = np.array(A, copy=True, dtype='float64', order='F')
+  A = np.asfortranarray(A)
   m, n = A.shape
   k, iU, iV, iS, w, ier = _id.iddp_svd(eps, A)
-  if ier != 0: raise RETCODE_ERROR
+  if ier != 0: raise _RETCODE_ERROR
   U = w[iU-1:iU+m*k-1].reshape((m, k), order='F')
   V = w[iV-1:iV+n*k-1].reshape((n, k), order='F')
   S = w[iS-1:iS+k-1]
@@ -481,10 +478,10 @@ def iddp_aid(eps, A):
     Interpolation coefficients.
   :rtype: :class:`numpy.ndarray`
   """
-  A = np.array(A, copy=False, dtype='float64', order='F')
+  A = np.asfortranarray(A)
   m, n = A.shape
   n2, w = idd_frmi(m)
-  proj = np.empty(n*(2*n2 + 1) + n2 + 1)
+  proj = np.empty(n*(2*n2 + 1) + n2 + 1, order='F')
   k, idx, proj = _id.iddp_aid(eps, A, w, proj)
   proj = proj[:k*(n-k)].reshape((k, n-k), order='F')
   return k, idx, proj
@@ -507,10 +504,10 @@ def idd_estrank(eps, A):
     Rank estimate.
   :rtype: int
   """
-  A = np.array(A, copy=False, dtype='float64', order='F')
+  A = np.asfortranarray(A)
   m, n = A.shape
   n2, w = idd_frmi(m)
-  ra = np.empty(n*n2 + (n + 1)*(n2 + 1))
+  ra = np.empty(n*n2 + (n + 1)*(n2 + 1), order='F')
   k, ra = _id.idd_estrank(eps, A, w, ra)
   return k
 
@@ -540,12 +537,14 @@ def iddp_asvd(eps, A):
     Singular values.
   :rtype: :class:`numpy.ndarray`
   """
-  A = np.array(A, copy=False, dtype='float64', order='F')
+  A = np.asfortranarray(A)
   m, n = A.shape
   n2, winit = _id.idd_frmi(m)
   w = np.empty(max((min(m,n) + 1)*(3*m + 5*n + 1) + 25*min(m,n)**2,
-                   (2*n + 1)*(n2 + 1)))
+                   (2*n + 1)*(n2 + 1)),
+               order='F')
   k, iU, iV, iS, w, ier = _id.iddp_asvd(eps, A, winit, w)
+  if ier != 0: raise _RETCODE_ERROR
   U = w[iU-1:iU+m*k-1].reshape((m, k), order='F')
   V = w[iV-1:iV+n*k-1].reshape((n, k), order='F')
   S = w[iS-1:iS+k-1]
@@ -585,9 +584,9 @@ def iddp_rid(eps, m, n, matvect):
     Interpolation coefficients.
   :rtype: :class:`numpy.ndarray`
   """
-  proj = np.empty(m + 1 + 2*n*(min(m,n) + 1))
+  proj = np.empty(m + 1 + 2*n*(min(m,n) + 1), order='F')
   k, idx, proj, ier = _id.iddp_rid(eps, m, n, matvect, proj)
-  if ier != 0: raise RETCODE_ERROR
+  if ier != 0: raise _RETCODE_ERROR
   proj = proj[:k*(n-k)].reshape((k, n-k), order='F')
   return k, idx, proj
 
@@ -616,7 +615,7 @@ def idd_findrank(eps, m, n, matvect):
   :rtype: int
   """
   k, ra, ier = _id.idd_findrank(eps, m, n, matvect)
-  if ier != 0: raise RETCODE_ERROR
+  if ier != 0: raise _RETCODE_ERROR
   return k
 
 #-------------------------------------------------------------------------------
@@ -659,7 +658,7 @@ def iddp_rsvd(eps, m, n, matvect, matvec):
   :rtype: :class:`numpy.ndarray`
   """
   k, iU, iV, iS, w, ier = _id.iddp_rsvd(eps, m, n, matvect, matvec)
-  if ier != 0: raise RETCODE_ERROR
+  if ier != 0: raise _RETCODE_ERROR
   U = w[iU-1:iU+m*k-1].reshape((m, k), order='F')
   V = w[iV-1:iV+n*k-1].reshape((n, k), order='F')
   S = w[iS-1:iS+k-1]
@@ -687,12 +686,12 @@ def iddr_aid(A, k):
     Interpolation coefficients.
   :rtype: :class:`numpy.ndarray`
   """
-  A = np.array(A, copy=False, dtype='float64', order='F')
+  A = np.asfortranarray(A)
   m, n = A.shape
   w = iddr_aidi(m, n, k)
   idx, proj = _id.iddr_aid(A, k, w)
-  if k == n: proj = np.array([], dtype='float64')
-  proj = proj.reshape((k, n-k), order='F')
+  if k == n: proj = np.array([], dtype='float64', order='F')
+  else:      proj = proj.reshape((k, n-k), order='F')
   return idx, proj
 
 def iddr_aidi(m, n, k):
@@ -740,13 +739,13 @@ def iddr_asvd(A, k):
     Singular values.
   :rtype: :class:`numpy.ndarray`
   """
-  A = np.array(A, copy=False, dtype='float64', order='F')
+  A = np.asfortranarray(A)
   m, n = A.shape
-  w = np.empty((2*k + 28)*m + (6*k + 21)*n + 25*k**2 + 100)
+  w = np.empty((2*k + 28)*m + (6*k + 21)*n + 25*k**2 + 100, order='F')
   w_ = iddr_aidi(m, n, k)
   w[:w_.size] = w_
   U, V, S, ier = _id.iddr_asvd(A, k, w)
-  if ier != 0: raise RETCODE_ERROR
+  if ier != 0: raise _RETCODE_ERROR
   return U, V, S
 
 #-------------------------------------------------------------------------------
@@ -824,7 +823,7 @@ def iddr_rsvd(m, n, matvect, matvec, k):
   :rtype: :class:`numpy.ndarray`
   """
   U, V, S, ier = _id.iddr_rsvd(m, n, matvect, matvec, k)
-  if ier != 0: raise RETCODE_ERROR
+  if ier != 0: raise _RETCODE_ERROR
   return U, V, S
 
 #-------------------------------------------------------------------------------
@@ -948,11 +947,10 @@ def idzp_id(eps, A):
     Interpolation coefficients.
   :rtype: :class:`numpy.ndarray`
   """
-  A = np.array(A, copy=True, dtype='complex128', order='F')
+  A = np.asfortranarray(A)
   k, idx, rnorms = _id.idzp_id(eps, A)
   n = A.shape[1]
-  A = A.T.reshape(A.size)
-  proj = A[:k*(n-k)].reshape((k, n-k), order='F')
+  proj = A.T.ravel()[:k*(n-k)].reshape((k, n-k), order='F')
   return k, idx, proj
 
 def idzr_id(A, k):
@@ -973,11 +971,10 @@ def idzr_id(A, k):
     Interpolation coefficients.
   :rtype: :class:`numpy.ndarray`
   """
-  A = np.array(A, copy=True, dtype='complex128', order='F')
+  A = np.asfortranarray(A)
   idx, rnorms = _id.idzr_id(A, k)
   n = A.shape[1]
-  A = A.T.reshape(A.size)
-  proj = A[:k*(n-k)].reshape((k, n-k), order='F')
+  proj = A.T.ravel()[:k*(n-k)].reshape((k, n-k), order='F')
   return idx, proj
 
 def idz_reconid(B, idx, proj):
@@ -998,12 +995,9 @@ def idz_reconid(B, idx, proj):
     Reconstructed matrix.
   :rtype: :class:`numpy.ndarray`
   """
-  B = np.array(B, copy=False, dtype='complex128', order='F')
-  if proj.size > 0:
-    return _id.idd_reconid(B, idx, proj)
-  else:
-    P = idd_reconint(idx, proj)
-    return np.dot(B, P)
+  B = np.asfortranarray(B)
+  if proj.size > 0: return _id.idz_reconid(B, idx, proj)
+  else:             return B[:,np.argsort(idx)]
 
 def idz_reconint(idx, proj):
   """
@@ -1040,7 +1034,7 @@ def idz_copycols(A, k, idx):
     Skeleton matrix.
   :rtype: :class:`numpy.ndarray`
   """
-  A = np.array(A, copy=False, dtype='complex128', order='F')
+  A = np.asfortranarray(A)
   return _id.idz_copycols(A, k, idx)
 
 #-------------------------------------------------------------------------------
@@ -1071,9 +1065,9 @@ def idz_id2svd(B, idx, proj):
     Singular values.
   :rtype: :class:`numpy.ndarray`
   """
-  B = np.array(B, copy=False, dtype='complex128', order='F')
+  B = np.asfortranarray(B)
   U, V, S, ier = _id.idz_id2svd(B, idx, proj)
-  if ier != 0: raise RETCODE_ERROR
+  if ier != 0: raise _RETCODE_ERROR
   return U, V, S
 
 #-------------------------------------------------------------------------------
@@ -1177,9 +1171,9 @@ def idzr_svd(A, k):
     Singular values.
   :rtype: :class:`numpy.ndarray`
   """
-  A = np.array(A, copy=True, dtype='complex128', order='F')
+  A = np.asfortranarray(A)
   U, V, S, ier = _id.idzr_svd(A, k)
-  if ier != 0: raise RETCODE_ERROR
+  if ier != 0: raise _RETCODE_ERROR
   return U, V, S
 
 def idzp_svd(eps, A):
@@ -1203,10 +1197,10 @@ def idzp_svd(eps, A):
     Singular values.
   :rtype: :class:`numpy.ndarray`
   """
-  A = np.array(A, copy=True, dtype='complex128', order='F')
+  A = np.asfortranarray(A)
   m, n = A.shape
   k, iU, iV, iS, w, ier = _id.idzp_svd(eps, A)
-  if ier != 0: raise RETCODE_ERROR
+  if ier != 0: raise _RETCODE_ERROR
   U = w[iU-1:iU+m*k-1].reshape((m, k), order='F')
   V = w[iV-1:iV+n*k-1].reshape((n, k), order='F')
   S = w[iS-1:iS+k-1]
@@ -1238,10 +1232,10 @@ def idzp_aid(eps, A):
     Interpolation coefficients.
   :rtype: :class:`numpy.ndarray`
   """
-  A = np.array(A, copy=False, dtype='complex128', order='F')
+  A = np.asfortranarray(A)
   m, n = A.shape
   n2, w = idz_frmi(m)
-  proj = np.empty(n*(2*n2 + 1) + n2 + 1, dtype='complex128')
+  proj = np.empty(n*(2*n2 + 1) + n2 + 1, dtype='complex128', order='F')
   k, idx, proj = _id.idzp_aid(eps, A, w, proj)
   proj = proj[:k*(n-k)].reshape((k, n-k), order='F')
   return k, idx, proj
@@ -1264,10 +1258,10 @@ def idz_estrank(eps, A):
     Rank estimate.
   :rtype: int
   """
-  A = np.array(A, copy=False, dtype='complex128', order='F')
+  A = np.asfortranarray(A)
   m, n = A.shape
   n2, w = idz_frmi(m)
-  ra = np.empty(n*n2 + (n + 1)*(n2 + 1), dtype='complex128')
+  ra = np.empty(n*n2 + (n + 1)*(n2 + 1), dtype='complex128', order='F')
   k, ra = _id.idz_estrank(eps, A, w, ra)
   return k
 
@@ -1297,13 +1291,14 @@ def idzp_asvd(eps, A):
     Singular values.
   :rtype: :class:`numpy.ndarray`
   """
-  A = np.array(A, copy=False, dtype='complex128', order='F')
+  A = np.asfortranarray(A)
   m, n = A.shape
   n2, winit = _id.idz_frmi(m)
   w = np.empty(max((min(m,n) + 1)*(3*m + 5*n + 11) + 8*min(m,n)**2,
                    (2*n + 1)*(n2 + 1)),
-               dtype='complex128')
+               dtype='complex128', order='F')
   k, iU, iV, iS, w, ier = _id.idzp_asvd(eps, A, winit, w)
+  if ier != 0: raise _RETCODE_ERROR
   U = w[iU-1:iU+m*k-1].reshape((m, k), order='F')
   V = w[iV-1:iV+n*k-1].reshape((n, k), order='F')
   S = w[iS-1:iS+k-1]
@@ -1343,9 +1338,9 @@ def idzp_rid(eps, m, n, matveca):
     Interpolation coefficients.
   :rtype: :class:`numpy.ndarray`
   """
-  proj = np.empty(m + 1 + 2*n*(min(m,n) + 1), dtype='complex128')
+  proj = np.empty(m + 1 + 2*n*(min(m,n) + 1), dtype='complex128', order='F')
   k, idx, proj, ier = _id.idzp_rid(eps, m, n, matveca, proj)
-  if ier != 0: raise RETCODE_ERROR
+  if ier != 0: raise _RETCODE_ERROR
   proj = proj[:k*(n-k)].reshape((k, n-k), order='F')
   return k, idx, proj
 
@@ -1374,7 +1369,7 @@ def idz_findrank(eps, m, n, matveca):
   :rtype: int
   """
   k, ra, ier = _id.idz_findrank(eps, m, n, matveca)
-  if ier != 0: raise RETCODE_ERROR
+  if ier != 0: raise _RETCODE_ERROR
   return k
 
 #-------------------------------------------------------------------------------
@@ -1417,7 +1412,7 @@ def idzp_rsvd(eps, m, n, matveca, matvec):
   :rtype: :class:`numpy.ndarray`
   """
   k, iU, iV, iS, w, ier = _id.idzp_rsvd(eps, m, n, matveca, matvec)
-  if ier != 0: raise RETCODE_ERROR
+  if ier != 0: raise _RETCODE_ERROR
   U = w[iU-1:iU+m*k-1].reshape((m, k), order='F')
   V = w[iV-1:iV+n*k-1].reshape((n, k), order='F')
   S = w[iS-1:iS+k-1]
@@ -1445,12 +1440,12 @@ def idzr_aid(A, k):
     Interpolation coefficients.
   :rtype: :class:`numpy.ndarray`
   """
-  A = np.array(A, copy=False, dtype='complex128', order='F')
+  A = np.asfortranarray(A)
   m, n = A.shape
   w = idzr_aidi(m, n, k)
   idx, proj = _id.idzr_aid(A, k, w)
-  if k == n: proj = np.array([], dtype='complex128')
-  proj = proj.reshape((k, n-k), order='F')
+  if k == n: proj = np.array([], dtype='complex128', order='F')
+  else:      proj = proj.reshape((k, n-k), order='F')
   return idx, proj
 
 def idzr_aidi(m, n, k):
@@ -1498,14 +1493,14 @@ def idzr_asvd(A, k):
     Singular values.
   :rtype: :class:`numpy.ndarray`
   """
-  A = np.array(A, copy=False, dtype='complex128', order='F')
+  A = np.asfortranarray(A)
   m, n = A.shape
   w = np.empty((2*k + 22)*m + (6*k + 21)*n + 8*k**2 + 10*k + 90,
-               dtype='complex128')
+               dtype='complex128', order='F')
   w_ = idzr_aidi(m, n, k)
   w[:w_.size] = w_
   U, V, S, ier = _id.idzr_asvd(A, k, w)
-  if ier != 0: raise RETCODE_ERROR
+  if ier != 0: raise _RETCODE_ERROR
   return U, V, S
 
 #-------------------------------------------------------------------------------
@@ -1583,5 +1578,5 @@ def idzr_rsvd(m, n, matveca, matvec, k):
   :rtype: :class:`numpy.ndarray`
   """
   U, V, S, ier = _id.idzr_rsvd(m, n, matveca, matvec, k)
-  if ier != 0: raise RETCODE_ERROR
+  if ier != 0: raise _RETCODE_ERROR
   return U, V, S

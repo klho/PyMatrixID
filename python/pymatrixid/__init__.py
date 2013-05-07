@@ -33,10 +33,9 @@ Python module for interfacing with `id_dist`.
 
 from pymatrixid import backend
 import numpy as np
+from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
-_DTYPE_ERROR   =    TypeError("invalid data type")
-_NARG_ERROR    =   ValueError("unknown input specification")
-_RETCODE_ERROR = RuntimeError("nonzero return code")
+_DTYPE_ERROR = TypeError ("invalid data type")
 
 def rand(*args):
   """
@@ -54,7 +53,7 @@ def rand(*args):
   - If an integer `n` is given as input, then an array of `n` pseudorandom
     numbers are returned.
 
-  - If an array `s` of 55 values are given as input, then the seed values are
+  - If an array `s` of 55 values is given as input, then the seed values are
     set to `s`.
 
   For details, see :func:`backend.id_srand`, :func:`backend.id_srandi`, and
@@ -62,119 +61,140 @@ def rand(*args):
   """
   if   len(args) == 0: backend.id_srando()
   elif len(args) == 1:
-    x = np.array(args[0], copy=False)
+    x = np.asfortranarray(args[0])
     if   x.size ==  1: return backend.id_srand (x)
     elif x.size == 55:        backend.id_srandi(x)
     else: raise ValueError("invalid input size")
-  else: raise _NARG_ERROR
+  else: raise ValueError("unknown input specification")
 
-def id(*args, **kwargs):
+def interp_decomp(A, eps_or_k, rand=True):
   """
   Compute ID of a matrix.
 
-  An ID of a matrix :math:`A` is a factorization :math:`A = BP`, where :math:`B`
-  is a skeleton matrix consisting of a subset of the columns of :math:`A` and
-  :math:`P` is an interpolation matrix containing the identity.
+  An ID of a matrix `A` is a factorization defined by a rank `k`, a column index
+  array `idx`, and interpolation coefficients `proj` such that::
 
-  Several call signatures are available::
+    numpy.dot(A[:,idx[:k]], proj) = A[:,idx[k:]]
 
-    id(A, eps)
-    id(A, k)
-    id(m, n, matveca, eps)
-    id(m, n, matveca, k)
+  The original matrix can then be reconstructed as::
 
-  The first pair of signatures represents the matrix via its entries, which is
-  input as the first argument. The second argument denotes either the relative
-  precision of approximation for the ID or its rank, depending on its value
-  (interpreted as a precision if less than or equal to one and otherwise as a
-  rank). An optional argument `rand` is also available: set `rand=True` to use
-  random sampling and `rand=False` to use the deterministic algorithm (default:
-  `rand=True`).
+    numpy.hstack([A[:,idx[:k]],
+                  numpy.dot(A[:,idx[:k]], proj)]
+                )[:,numpy.argsort(idx)]
 
-  The second signature pair represents the matrix via its action on a vector.
-  This is specified by the first three arguments denoting, respectively, the
-  matrix row dimension, the matrix column dimension, and a function to apply the
-  matrix adjoint to a vector, with call signature `y = matveca(x)`, where `x`
-  and `y` are the input and output vectors, respectively. The fourth argument
-  gives either the relative precision of approximation for the ID or its rank as
-  described above.
+  or via the routine :func:`reconstruct_matrix_from_id`. This can equivalently
+  be written as::
 
-  For calls specifying a precision, outputs include:
+    numpy.dot(A[:,idx[:k]],
+              numpy.hstack([numpy.eye(k), proj])
+             )[:,np.argsort(idx)]
 
-  1. The rank of the ID required to achieve this precision.
-  2. A column index array specifying the ID permutation.
-  3. Interpolation coefficients for the interpolation matrix in the ID.
+  in terms of the skeleton and interpolation matrices::
 
-  For calls specifying a rank, outputs include just the last two above.
+    B = A[:,idx[:k]]
 
-  A matrix `A` with ID, e.g.::
+  and::
 
-    k, idx, proj = id(A, eps)
+    P = numpy.hstack([numpy.eye(k), proj])[:,np.argsort(idx)]
 
-  can be reconstructed as::
+  respectively. See also :func:`reconstruct_interp_matrix` and
+  :func:`reconstruct_skel_matrix`.
 
-    B = A[:,idx[:k]-1]
-    P = numpy.hstack([numpy.eye(k), proj])
-    approx = numpy.dot(B, P)[:,numpy.argsort(idx)]
+  The ID can be computed to any relative precision or rank (depending on the
+  value of `eps_or_k`). If a precision is specified (`eps_or_k < 1`), then this
+  function has the output signature::
 
-  or via the routines :func:`reconid`, :func:`reconint`, and :func:`reconskel`.
+    k, idx, proj = interp_decomp(A, eps_or_k)
 
-  This function automatically detects the form of the call signature and the
-  matrix data type, and passes the inputs to the proper backend. For details,
-  see :func:`backend.iddp_id`, :func:`backend.iddp_aid`
-  :func:`backend.iddp_rid`, :func:`backend.iddr_id`, :func:`backend.iddr_aid`,
-  :func:`backend.iddr_rid`, :func:`backend.idzp_id`, :func:`backend.idzp_aid`,
-  :func:`backend.idzp_rid`, :func:`backend.idzr_id`, :func:`backend.idzr_aid`,
-  and :func:`backend.idzr_rid`.
+  Otherwise, if a rank is specified (`eps_or_k >= 1`), then the output signature
+  is::
+
+    idx, proj = interp_decomp(A, eps_or_k)
+
+  This function automatically detects the form of the input parameters and
+  passes them to the appropriate backend. For details, see
+  :func:`backend.iddp_id`, :func:`backend.iddp_aid`, :func:`backend.iddp_rid`,
+  :func:`backend.iddr_id`, :func:`backend.iddr_aid`, :func:`backend.iddr_rid`,
+  :func:`backend.idzp_id`, :func:`backend.idzp_aid`, :func:`backend.idzp_rid`,
+  :func:`backend.idzr_id`, :func:`backend.idzr_aid`, and
+  :func:`backend.idzr_rid`.
+
+  :param A:
+    Matrix to be factored, given as either a :class:`numpy.ndarray` or a
+    :class:`scipy.sparse.linalg.LinearOperator` with the `rmatvec` method (to
+    apply the matrix adjoint).
+  :type A: :class:`numpy.ndarray` or :class:`scipy.sparse.linalg.LinearOperator`
+  :param eps_or_k:
+    Relative error (if `eps_or_k < 1`) or rank (if `eps_or_k >= 1`) of
+    approximation.
+  :type eps_or_k: float or int
+  :keyword rand:
+    Whether to use random sampling if `A` is of type :class:`numpy.ndarray`
+    (randomized algorithms are always used if `A` is of type
+    :class:`scipy.sparse.linalg.LinearOperator`).
+  :type rand: bool
+
+  :return:
+    Rank required to achieve specified relative precision if
+    `eps_or_k < 1`.
+  :rtype: int
+  :return:
+    Column index array.
+  :rtype: :class:`numpy.ndarray`
+  :return:
+    Interpolation coefficients.
+  :rtype: :class:`numpy.ndarray`
   """
-  prefix = ''
-  if len(args) == 2:
-    A, eps_or_k = args
-    if   A.dtype ==    'float64': prefix += 'd'
-    elif A.dtype == 'complex128': prefix += 'z'
+  try:
+    if   A.dtype ==    'float64': real = True
+    elif A.dtype == 'complex128': real = False
     else: raise _DTYPE_ERROR
+  except: raise _DTYPE_ERROR
+  if isinstance(A, np.ndarray):
     if eps_or_k < 1:
       eps = eps_or_k
-      prefix += 'p'
-      argstr  = 'eps, A'
+      if rand:
+        if real: k, idx, proj = backend.iddp_aid(eps, A)
+        else:    k, idx, proj = backend.idzp_aid(eps, A)
+      else:
+        if real: k, idx, proj = backend.iddp_id(eps, A)
+        else:    k, idx, proj = backend.idzp_id(eps, A)
+      return k, idx - 1, proj
     else:
       k = int(eps_or_k)
-      prefix += 'r'
-      argstr  = 'A, k'
-    rand = kwargs.get('rand', True)
-    if rand: suffix = 'a'
-    else:    suffix = ''
-  elif len(args) == 4:
-    m, n, matveca, eps_or_k = args
-    dtype = matveca(0).dtype
-    if   dtype ==    'float64': prefix += 'd'
-    elif dtype == 'complex128': prefix += 'z'
-    else: raise _DTYPE_ERROR
+      if rand:
+        if real: idx, proj = backend.iddr_aid(A, k)
+        else:    idx, proj = backend.idzr_aid(A, k)
+      else:
+        if real: idx, proj = backend.iddr_id(A, k)
+        else:    idx, proj = backend.idzr_id(A, k)
+      return idx - 1, proj
+  elif isinstance(A, LinearOperator):
+    m, n = A.shape
+    matveca = A.rmatvec
     if eps_or_k < 1:
       eps = eps_or_k
-      prefix += 'p'
-      argstr  = 'eps, m, n, matveca'
+      if real: k, idx, proj = backend.iddp_rid(eps, m, n, matveca)
+      else:    k, idx, proj = backend.idzp_rid(eps, m, n, matveca)
+      return k, idx - 1, proj
     else:
       k = int(eps_or_k)
-      prefix += 'r'
-      argstr  = 'm, n, matveca, k'
-    suffix = 'r'
-  else: raise _NARG_ERROR
-  s = 'backend.id%s_%sid(%s)' % (prefix, suffix, argstr)
-  return eval(s)
+      if real: idx, proj = backend.iddr_rid(m, n, matveca, k)
+      else:    idx, proj = backend.idzr_rid(m, n, matveca, k)
+      return idx - 1, proj
+  else: raise _DTYPE_ERROR
 
-def reconid(B, idx, proj):
+def reconstruct_matrix_from_id(B, idx, proj):
   """
-  Reconstruct matrix from ID.
+  Reconstruct matrix from its ID.
 
   A matrix `A` with skeleton matrix `B` and ID indices and coefficients `idx`
   and `proj`, respectively, can be reconstructed as::
 
-    k = B.shape[1]
-    P = numpy.hstack([numpy.eye(k), proj])[:,numpy.argsort(idx)]
-    approx = numpy.dot(B, P)
+    numpy.hstack([B, numpy.dot(B, proj)])[:,numpy.argsort(idx)]
 
-  See also :func:`reconint` and :func:`reconskel`.
+  See also :func:`reconstruct_interp_matrix` and
+  :func:`reconstruct_skel_matrix`.
 
   This function automatically detects the matrix data type and calls the
   appropriate backend. For details, see :func:`backend.idd_reconid` and
@@ -194,19 +214,26 @@ def reconid(B, idx, proj):
     Reconstructed matrix.
   :rtype: :class:`numpy.ndarray`
   """
-  if   B.dtype ==    'float64': return backend.idd_reconid(B, idx, proj)
-  elif B.dtype == 'complex128': return backend.idz_reconid(B, idx, proj)
+  if   B.dtype ==    'float64': return backend.idd_reconid(B, idx + 1, proj)
+  elif B.dtype == 'complex128': return backend.idz_reconid(B, idx + 1, proj)
   else: raise _DTYPE_ERROR
 
-def reconint(idx, proj):
+def reconstruct_interp_matrix(idx, proj):
   """
   Reconstruct interpolation matrix from ID.
 
   The interpolation matrix can be reconstructed from the ID indices and
   coefficients `idx` and `proj`, respectively, as::
 
-    k = proj.shape[0]
-    P = numpy.hstack([numpy.eye(k), proj])[:,numpy.argsort(idx)]
+    P = numpy.hstack([numpy.eye(proj.shape[0]), proj])[:,numpy.argsort(idx)]
+
+  The original matrix can then be reconstructed from its skeleton matrix `B`
+  via::
+
+    numpy.dot(B, P)
+
+  See also :func:`reconstruct_matrix_from_id` and
+  :func:`reconstruct_skel_matrix`.
 
   This function automatically detects the matrix data type and calls the
   appropriate backend. For details, see :func:`backend.idd_reconint` and
@@ -223,18 +250,25 @@ def reconint(idx, proj):
     Interpolation matrix.
   :rtype: :class:`numpy.ndarray`
   """
-  if   proj.dtype ==    'float64': return backend.idd_reconint(idx, proj)
-  elif proj.dtype == 'complex128': return backend.idz_reconint(idx, proj)
+  if   proj.dtype ==    'float64': return backend.idd_reconint(idx + 1, proj)
+  elif proj.dtype == 'complex128': return backend.idz_reconint(idx + 1, proj)
   else: raise _DTYPE_ERROR
 
-def reconskel(A, k, idx):
+def reconstruct_skel_matrix(A, k, idx):
   """
   Reconstruct skeleton matrix from ID.
 
-  The skeleton matrix can be reconstructed from the original matrix `A`, its
-  rank `k`, and the ID indices `idx` as::
+  The skeleton matrix can be reconstructed from the original matrix `A` and its
+  ID rank and indices `k` and `idx`, respectively, as::
 
-    B = A[:,idx[:k]-1]
+    B = A[:,idx[:k]]
+
+  The original matrix can then be reconstructed via::
+
+    numpy.hstack([B, numpy.dot(B, proj)])[:,numpy.argsort(idx)]
+
+  See also :func:`reconstruct_matrix_from_id` and
+  :func:`reconstruct_interp_matrix`.
 
   This function automatically detects the matrix data type and calls the
   appropriate backend. For details, see :func:`backend.idd_copycols` and
@@ -254,13 +288,21 @@ def reconskel(A, k, idx):
     Skeleton matrix.
   :rtype: :class:`numpy.ndarray`
   """
-  if   A.dtype ==    'float64': return backend.idd_copycols(A, k, idx)
-  elif A.dtype == 'complex128': return backend.idz_copycols(A, k, idx)
+  if   A.dtype ==    'float64': return backend.idd_copycols(A, k, idx + 1)
+  elif A.dtype == 'complex128': return backend.idz_copycols(A, k, idx + 1)
   else: raise _DTYPE_ERROR
 
-def id2svd(B, idx, proj):
+def id_to_svd(B, idx, proj):
   """
   Convert ID to SVD.
+
+  The SVD reconstruction of a matrix with skeleton matrix `B` and ID indices and
+  coefficients `idx` and `proj`, respectively, is::
+
+    U, S, V = id_to_svd(B, idx, proj)
+    A = numpy.dot(U, numpy.dot(numpy.diag(S), V.conj().T))
+
+  See also :func:`svd`.
 
   This function automatically detects the matrix data type and calls the
   appropriate backend. For details, see :func:`backend.idd_id2svd` and
@@ -286,12 +328,12 @@ def id2svd(B, idx, proj):
     Right singular vectors.
   :rtype: :class:`numpy.ndarray`
   """
-  if   B.dtype ==    'float64': U, V, S = backend.idd_id2svd(B, idx, proj)
-  elif B.dtype == 'complex128': U, V, S = backend.idz_id2svd(B, idx, proj)
+  if   B.dtype ==    'float64': U, V, S = backend.idd_id2svd(B, idx + 1, proj)
+  elif B.dtype == 'complex128': U, V, S = backend.idz_id2svd(B, idx + 1, proj)
   else: raise _DTYPE_ERROR
   return U, S, V
 
-def snorm(m, n, matvec, matveca, its=20):
+def estimate_spectral_norm(A, its=20):
   """
   Estimate spectral norm of a matrix by the randomized power method.
 
@@ -299,23 +341,11 @@ def snorm(m, n, matvec, matveca, its=20):
   appropriate backend. For details, see :func:`backend.idd_snorm` and
   :func:`backend.idz_snorm`.
 
-  :param m:
-    Matrix row dimension.
-  :type m: int
-  :param n:
-    Matrix column dimension.
-  :type n: int
-  :param matvec:
-    Function to apply the matrix to a vector, with call signature
-    `y = matvec(x)`, where `x` and `y` are the input and output vectors,
-    respectively.
-  :type matvec: function
-  :param matveca:
-    Function to apply the matrix adjoint to a vector, with call signature
-    `y = matveca(x)`, where `x` and `y` are the input and output vectors,
-    respectively.
-  :type matveca: function
-  :param its:
+  :param A:
+    Matrix given as a :class:`scipy.sparse.linalg.LinearOperator` with the
+    `matvec` and `rmatvec` methods (to apply the matrix and its adjoint).
+  :type A: :class:`scipy.sparse.linalg.LinearOperator`
+  :keyword its:
     Number of power method iterations.
   :type its: int
 
@@ -323,14 +353,17 @@ def snorm(m, n, matvec, matveca, its=20):
     Spectral norm estimate.
   :rtype: float
   """
-  dtype = matveca(0).dtype
-  if   dtype ==    'float64':
+  A = aslinearoperator(A)
+  m, n = A.shape
+  matvec  = lambda x: A. matvec(x)
+  matveca = lambda x: A.rmatvec(x)
+  if A.dtype == 'float64':
     return backend.idd_snorm(m, n, matveca, matvec, its=its)
-  elif dtype == 'complex128':
+  elif A.dtype == 'complex128':
     return backend.idz_snorm(m, n, matveca, matvec, its=its)
   else: raise _DTYPE_ERROR
 
-def diffsnorm(m, n, matvec1, matvec2, matveca1, matveca2, its=20):
+def estimate_spectral_norm_diff(A, B, its=20):
   """
   Estimate spectral norm of the difference of two matrices by the randomized
   power method.
@@ -339,33 +372,15 @@ def diffsnorm(m, n, matvec1, matvec2, matveca1, matveca2, its=20):
   appropriate backend. For details, see :func:`backend.idd_diffsnorm` and
   :func:`backend.idz_diffsnorm`.
 
-  :param m:
-    Matrix row dimension.
-  :type m: int
-  :param n:
-    Matrix column dimension.
-  :type n: int
-  :param matvec1:
-    Function to apply the first matrix to a vector, with call signature
-    `y = matvec1(x)`, where `x` and `y` are the input and output vectors,
-    respectively.
-  :type matvec1: function
-  :param matvec2:
-    Function to apply the second matrix to a vector, with call signature
-    `y = matvec2(x)`, where `x` and `y` are the input and output vectors,
-    respectively.
-  :type matvec2: function
-  :param matveca1:
-    Function to apply the adjoint of the first matrix to a vector, with call
-    signature `y = matveca1(x)`, where `x` and `y` are the input and output
-    vectors, respectively.
-  :type matveca1: function
-  :param matveca2:
-    Function to apply the adjoint of the second matrix to a vector, with call
-    signature `y = matveca2(x)`, where `x` and `y` are the input and output
-    vectors, respectively.
-  :type matveca2: function
-  :param its:
+  :param A:
+    First matrix given as a :class:`scipy.sparse.linalg.LinearOperator` with the
+    `matvec` and `rmatvec` methods (to apply the matrix and its adjoint).
+  :type A: :class:`scipy.sparse.linalg.LinearOperator`
+  :param B:
+    Second matrix given as a :class:`scipy.sparse.linalg.LinearOperator` with
+    the `matvec` and `rmatvec` methods (to apply the matrix and its adjoint).
+  :type B: :class:`scipy.sparse.linalg.LinearOperator`
+  :keyword its:
     Number of power method iterations.
   :type its: int
 
@@ -373,55 +388,59 @@ def diffsnorm(m, n, matvec1, matvec2, matveca1, matveca2, its=20):
     Spectral norm estimate of matrix difference.
   :rtype: float
   """
-  dtype = matveca(0).dtype
-  if dtype == 'float64':
+  A = aslinearoperator(A)
+  B = aslinearoperator(B)
+  m, n = A.shape
+  matvec1  = lambda x: A. matvec(x)
+  matveca1 = lambda x: A.rmatvec(x)
+  matvec2  = lambda x: B. matvec(x)
+  matveca2 = lambda x: B.rmatvec(x)
+  if A.dtype == 'float64':
     return backend.idd_diffsnorm(m, n, matveca1, matveca2, matvec1, matvec2,
                                  its=its)
-  elif dtype == 'complex128':
+  elif A.dtype == 'complex128':
     return backend.idz_diffsnorm(m, n, matveca1, matveca2, matvec1, matvec2,
                                  its=its)
   else: raise _DTYPE_ERROR
 
-def svd(*args, **kwargs):
+def svd(A, eps_or_k, rand=True):
   """
-  Compute SVD of a matrix.
+  Compute SVD of a matrix via an ID.
 
-  An SVD of a matrix :math:`A` is a factorization :math:`A = U S V^{*}`, where
-  :math:`U` and :math:`V` have orthonormal columns, and :math:`S` is diagonal
-  with nonnegative entries.
+  An SVD of a matrix `A` is a factorization::
 
-  Several call signatures are available::
+    A = numpy.dot(U, numpy.dot(numpy.diag(S), V.conj().T))
 
-    svd(A, eps)
-    svd(A, k)
-    svd(m, n, matvec, matveca, eps)
-    svd(m, n, matvec, matveca, k)
+  where `U` and `V` have orthonormal columns and `S` is nonnegative.
 
-  The first pair of signatures represents the matrix via its entries, which is
-  input as the first argument. The second argument denotes either the relative
-  precision of approximation for the SVD or its rank, depending on its value
-  (interpreted as a precision if less than or equal to one and otherwise as a
-  rank). An optional argument `rand` is also available: set `rand=True` to use
-  random sampling and `rand=False` to use the deterministic algorithm (default:
-  `rand=True`).
+  The SVD can be computed to any relative precision or rank (depending on the
+  value of `eps_or_k`).
 
-  The second signature pair represents the matrix via its action on a vector.
-  This is specified by the first four arguments denoting, respectively, the
-  matrix row dimension, the matrix column dimension, a function to apply the
-  matrix to a vector, and a function to apply the matrix adjoint to a vector.
-  These functions have call signatures `y = matvec(x)` and `y = matveca(x)`,
-  respectively, where `x` and `y` are the input and output vectors. The fifth
-  argument gives either the relative precision of approximation for the SVD or
-  its rank as described above.
+  See also :func:`interp_decomp` and :func:`id_to_svd`.
 
-  This function automatically detects the form of the call signature and the
-  matrix data type, and passes the inputs to the proper backend. For details,
-  see :func:`backend.iddp_svd`, :func:`backend.iddp_asvd`,
+  This function automatically detects the form of the input parameters and
+  passes them to the appropriate backend. For details, see
+  :func:`backend.iddp_svd`, :func:`backend.iddp_asvd`,
   :func:`backend.iddp_rsvd`, :func:`backend.iddr_svd`,
   :func:`backend.iddr_asvd`, :func:`backend.iddr_rsvd`,
   :func:`backend.idzp_svd`, :func:`backend.idzp_asvd`,
   :func:`backend.idzp_rsvd`, :func:`backend.idzr_svd`,
-  :func:`backend.idzr_asvd`, :func:`backend.idzr_rsvd`.
+  :func:`backend.idzr_asvd`, and :func:`backend.idzr_rsvd`.
+
+  :param A:
+    Matrix to be factored, given as either a :class:`numpy.ndarray` or a
+    :class:`scipy.sparse.linalg.LinearOperator` with the `matvec` and `rmatvec`
+    methods (to apply the matrix and its adjoint).
+  :type A: :class:`numpy.ndarray` or :class:`scipy.sparse.linalg.LinearOperator`
+  :param eps_or_k:
+    Relative error (if `eps_or_k < 1`) or rank (if `eps_or_k >= 1`) of
+    approximation.
+  :type eps_or_k: float or int
+  :keyword rand:
+    Whether to use random sampling if `A` is of type :class:`numpy.ndarray`
+    (randomized algorithms are always used if `A` is of type
+    :class:`scipy.sparse.linalg.LinearOperator`).
+  :type rand: bool
 
   :return:
     Left singular vectors.
@@ -433,89 +452,82 @@ def svd(*args, **kwargs):
     Right singular vectors.
   :rtype: :class:`numpy.ndarray`
   """
-  prefix = ''
-  if len(args) == 2:
-    A, eps_or_k = args
-    if   A.dtype ==    'float64': prefix += 'd'
-    elif A.dtype == 'complex128': prefix += 'z'
+  try:
+    if   A.dtype ==    'float64': real = True
+    elif A.dtype == 'complex128': real = False
     else: raise _DTYPE_ERROR
+  except: raise _DTYPE_ERROR
+  if isinstance(A, np.ndarray):
     if eps_or_k < 1:
       eps = eps_or_k
-      prefix += 'p'
-      argstr  = 'eps, A'
+      if rand:
+        if real: U, V, S = backend.iddp_asvd(eps, A)
+        else:    U, V, S = backend.idzp_asvd(eps, A)
+      else:
+        if real: U, V, S = backend.iddp_svd(eps, A)
+        else:    U, V, S = backend.idzp_svd(eps, A)
     else:
       k = int(eps_or_k)
-      prefix += 'r'
-      argstr  = 'A, k'
-    rand = kwargs.get('rand', True)
-    if rand: suffix = 'a'
-    else:    suffix = ''
-  elif len(args) == 5:
-    m, n, matvec, matveca, eps_or_k = args
-    dtype = matveca(0).dtype
-    if   dtype ==    'float64': prefix += 'd'
-    elif dtype == 'complex128': prefix += 'z'
-    else: raise _DTYPE_ERROR
+      if rand:
+        if real: U, V, S = backend.iddr_asvd(A, k)
+        else:    U, V, S = backend.idzr_asvd(A, k)
+      else:
+        if real: U, V, S = backend.iddr_svd(A, k)
+        else:    U, V, S = backend.idzr_svd(A, k)
+  elif isinstance(A, LinearOperator):
+    m, n = A.shape
+    matvec  = lambda x: A.matvec (x)
+    matveca = lambda x: A.rmatvec(x)
     if eps_or_k < 1:
       eps = eps_or_k
-      prefix += 'p'
-      argstr  = 'eps, m, n, matveca, matvec'
+      if real: U, V, S = backend.iddp_rsvd(eps, m, n, matveca, matvec)
+      else:    U, V, S = backend.idzp_rsvd(eps, m, n, matveca, matvec)
     else:
       k = int(eps_or_k)
-      prefix += 'r'
-      argstr  = 'm, n, matveca, matvec, k'
-    suffix = 'r'
-  else: raise _NARG_ERROR
-  s = 'backend.id%s_%ssvd(%s)' % (prefix, suffix, argstr)
-  U, V, S = eval(s)
+      if real: U, V, S = backend.iddr_rsvd(m, n, matveca, matvec, k)
+      else:    U, V, S = backend.idzr_rsvd(m, n, matveca, matvec, k)
+  else: raise _DTYPE_ERROR
   return U, S, V
 
-def estrank(*args):
+def estimate_rank(A, eps):
   """
-  Estimate rank of a matrix to a specified relative precision using randomized
+  Estimate matrix rank to a specified relative precision using randomized
   methods.
 
-  Several call signatures are available::
+  The matrix `A` can be given as either a :class:`numpy.ndarray` or a
+  :class:`scipy.sparse.linalg.LinearOperator`, with different algorithms used
+  for each case. If `A` is of type :class:`numpy.ndarray`, then the output rank
+  is typically about 8 higher than the actual numerical rank.
 
-    estrank(A, eps)
-    estrank(m, n, matveca, eps)
-
-  The first signature represents the matrix via its entries, which is input as
-  the first argument. The second signature represents the matrix via its action
-  on a vector, which is specified by the first three arguments denoting,
-  respectively, the matrix row dimension, the matrix column dimension, and a
-  function to apply the matrix adjoint to a vector, with call signature
-  `y = matveca(x)`, where `x` and `y` are the input and output vectors,
-  respectively. In each case, the last argument gives the relative precision of
-  approximation.
-
-  If called using the first signature, the output rank is typically about 8
-  higher than the actual rank.
-
-  This function automatically detects the form of the call signature and the
-  matrix data type, and passes the inputs to the proper backend. For details,
+  This function automatically detects the form of the input parameters and
+  passes them to the appropriate backend. For details,
   see :func:`backend.idd_estrank`, :func:`backend.idd_findrank`,
   :func:`backend.idz_estrank`, and :func:`backend.idz_findrank`.
 
+  :param A:
+    Matrix whose rank is to be estimated, given as either a
+    :class:`numpy.ndarray` or a :class:`scipy.sparse.linalg.LinearOperator` with
+    the `rmatvec` method (to apply the matrix adjoint).
+  :type A: :class:`numpy.ndarray` or :class:`scipy.sparse.linalg.LinearOperator`
+  :param eps:
+    Relative error for numerical rank definition.
+  :type eps: float
+
   :return:
-    Rank estimate.
+    Estimated matrix rank.
   :rtype: int
   """
-  if len(args) == 2:
-    A, eps = args
-    if   A.dtype ==    'float64': prefix = 'd'
-    elif A.dtype == 'complex128': prefix = 'z'
+  try:
+    if   A.dtype ==    'float64': real = True
+    elif A.dtype == 'complex128': real = False
     else: raise _DTYPE_ERROR
-    suffix = 'estrank'
-    argstr = 'eps, A'
-  elif len(args) == 4:
-    m, n, matveca, eps = args
-    dtype = matveca(0).dtype
-    if   dtype ==    'float64': prefix = 'd'
-    elif dtype == 'complex128': prefix = 'z'
-    else: raise _DTYPE_ERROR
-    suffix = 'findrank'
-    argstr  = 'eps, m, n, matveca'
-  else: raise _NARG_ERROR
-  s = 'backend.id%s_%s(%s)' % (prefix, suffix, argstr)
-  return eval(s)
+  except: raise _DTYPE_ERROR
+  if isinstance(A, np.ndarray):
+    if real: return backend.idd_estrank(eps, A)
+    else:    return backend.idz_estrank(eps, A)
+  elif isinstance(A, LinearOperator):
+    m, n = A.shape
+    matveca = A.rmatvec
+    if real: return backend.idd_findrank(eps, m, n, matveca)
+    else:    return backend.idz_findrank(eps, m, n, matveca)
+  else: raise _DTYPE_ERROR

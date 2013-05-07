@@ -26,21 +26,27 @@ in order to tell Python where to look.
 
 Now let's build a matrix. For this, we consider a Hilbert matrix, which is well know to have low rank::
 
-  >>> import numpy as np
-  >>> m = n = 1000
-  >>> A = np.empty((m, n), order='F')
-  >>> for j in range(n):
-  ...     for i in range(m):
-  ...         A[i,j] = 1. / (i + j + 1)
+>>> from scipy.linalg import hilbert
+>>> n = 1000
+>>> A = hilbert(n)
 
-Note the use of the flag ``order='F'`` in :func:`numpy.array`. This instantiates the matrix in Fortran-contiguous order and is important for avoiding data copying when passing to the backend.
+We can also do this explicitly via::
 
-We also define multiplication routines for the matrix::
+>>> import numpy as np
+>>> n = 1000
+>>> A = np.empty((n, n), order='F')
+>>> for j in range(n):
+...     for i in range(m):
+...         A[i,j] = 1. / (i + j + 1)
 
->>> def matvec (x): return np.dot(A,   x)
->>> def matveca(x): return np.dot(A.T, x)
+Note the use of the flag ``order='F'`` in :func:`numpy.empty`. This instantiates the matrix in Fortran-contiguous order and is important for avoiding data copying when passing to the backend.
 
-describing its action and that of its adjoint, respectively, on a vector.
+We then define multiplication routines for the matrix by regarding it as a :class:`scipy.sparse.linalg.LinearOperator`::
+
+>>> from scipy.sparse.linalg import aslinearoperator
+>>> L = aslinearoperator(A)
+
+This automatically sets up methods describing the action of the matrix and its adjoint on a vector.
 
 Computing an ID
 ---------------
@@ -52,56 +58,66 @@ We have several choices of algorithm to compute an ID. These fall largely accord
 
 We step through each choice in turn below.
 
+In all cases, the ID is represented by three parameters:
+
+1. a rank ``k``;
+2. an index array ``idx``; and
+3. interpolation coefficients ``proj``.
+
+The ID is specified by the relation ``np.dot(A[:,idx[:k]], proj) = A[:,idx[k:]]``.
+
 From matrix entries
 ...................
 
-First, we consider a matrix given in terms of its entries.
+We first consider a matrix given in terms of its entries.
 
 To compute an ID to a fixed precision, type::
 
->>> k, idx, proj = pymatrixid.id(A, eps)
+>>> k, idx, proj = pymatrixid.interp_decomp(A, eps)
 
 where ``eps < 1`` is the desired precision.
 
 To compute an ID to a fixed rank, use::
 
->>> idx, proj = pymatrixid.id(A, k)
+>>> idx, proj = pymatrixid.interp_decomp(A, k)
 
 where ``k >= 1`` is the desired rank.
 
 Both algorithms use random sampling and are usually faster than the corresponding older, deterministic algorithms, which can be accessed via the commands::
 
->>> k, idx, proj = pymatrixid.id(A, eps, rand=False)
+>>> k, idx, proj = pymatrixid.interp_decomp(A, eps, rand=False)
 
 and::
 
->>> idx, proj = pymatrixid.id(A, k, rand=False)
+>>> idx, proj = pymatrixid.interp_decomp(A, k, rand=False)
 
 respectively.
 
 From matrix action
 ..................
 
-Now consider a matrix given in terms of its action on a vector.
+Now consider a matrix given in terms of its action on a vector as a :class:`scipy.sparse.linalg.LinearOperator`.
 
 To compute an ID to a fixed precision, type::
 
->>> k, idx, proj = pymatrixid.id(m, n, matveca, eps)
+>>> k, idx, proj = pymatrixid.interp_decomp(L, eps)
 
 To compute an ID to a fixed rank, use::
 
->>> idx, proj = pymatrixid.id(m, n, matveca, k)
+>>> idx, proj = pymatrixid.interp_decomp(L, k)
+
+These algorithms are randomized.
 
 Reconstructing an ID
 --------------------
 
 The ID routines above do not output the skeleton and interpolation matrices explicitly but instead return the relevant information in a more compact (and sometimes more useful) form. To build these matrices, write::
 
->>> B = pymatrixid.reconskel(A, k, idx)
+>>> B = pymatrixid.reconstruct_skel_matrix(A, k, idx)
 
 for the skeleton matrix and::
 
->>> P = pymatrixid.reconint(idx, proj)
+>>> P = pymatrixid.reconstruct_interp_matrix(idx, proj)
 
 for the interpolation matrix. The ID approximation can then be computed as::
 
@@ -109,28 +125,28 @@ for the interpolation matrix. The ID approximation can then be computed as::
 
 This can also be constructed directly using::
 
->>> C = pymatrixid.reconid(B, idx, proj)
+>>> C = pymatrixid.reconstruct_matrix_from_id(B, idx, proj)
 
-without having to first compute :math:`P`.
+without having to first compute ``P``.
 
-It is also possible to reconstruct the ID explicitly using::
+Alternatively, this can be done explicitly as well using::
 
-  B = A[:,idx[:k]-1]
-  P = np.hstack([np.eye(k), proj])
-  C = np.dot(B, P)[:,np.argsort(idx)]
+  B = A[:,idx[:k]]
+  P = np.hstack([np.eye(k), proj])[:,np.argsort(idx)]
+  C = np.dot(B, P)
 
 Computing an SVD
 ----------------
 
 An ID can be converted to an SVD via the command::
 
->>> U, S, V = pymatrixid.id2svd(B, idx, proj)
+>>> U, S, V = pymatrixid.id_to_svd(B, idx, proj)
 
 The SVD approximation is then::
 
->>> C = np.dot(U, np.dot(np.diag(S), np.dot(V.T)))
+>>> C = np.dot(U, np.dot(np.diag(S), np.dot(V.conj().T)))
 
-Alternatively, the SVD can be computed "fresh" by combining both the ID and conversion steps into one command. Following the various ID algorithms above, there are correspondingly various SVD algorithms that one can employ.
+The SVD can also be computed "fresh" by combining both the ID and conversion steps into one command. Following the various ID algorithms above, there are correspondingly various SVD algorithms that one can employ.
 
 From matrix entries
 ...................
@@ -154,11 +170,11 @@ Now consider a matrix given in terms of its action on a vector.
 
 To compute an SVD to a fixed precision, type::
 
->>> U, S, V = pymatrixid.svd(m, n, matvec, matveca, eps)
+>>> U, S, V = pymatrixid.svd(L, eps)
 
 To compute an SVD to a fixed rank, use::
 
->>> U, S, V = pymatrixid.svd(m, n, matvec, matveca, k)
+>>> U, S, V = pymatrixid.svd(L, k)
 
 Utility routines
 ----------------
@@ -167,25 +183,25 @@ Several utility routines are also available.
 
 To estimate the spectral norm of a matrix, use::
 
->>> snorm = pymatrixid.snorm(m, n, matvec, matveca)
+>>> snorm = pymatrixid.estimate_spectral_norm(A)
 
-This algorithm is based on the randomized power method and thus requires only matrix-vector products. The number of iterations to take can be set using the keyword ``its`` (default: ``its=20``).
+This algorithm is based on the randomized power method and thus requires only matrix-vector products. The number of iterations to take can be set using the keyword ``its`` (default: ``its=20``). The matrix is interpreted as a :class:`scipy.sparse.linalg.LinearOperator`, but it is also valid to supply it as a :class:`numpy.ndarray`, in which case it is trivially converted using :func:`scipy.sparse.linalg.aslinearoperator`.
 
-The same algorithm can also estimate the spectral norm of the difference of two matrices :math:`A_{1}` and :math:`A_{2}` as follows:
+The same algorithm can also estimate the spectral norm of the difference of two matrices ``A1`` and ``A2`` as follows:
 
->>> diff = pymatrixid.diffsnorm(m, n, matvec1, matvec2, matveca1, matveca2)
+>>> diff = pymatrixid.estimate_spectral_norm_diff(A1, A2)
 
-where the functions ``matvec1``, ``matvec2``, ``matveca1``, and ``matveca2`` apply the matrices :math:`A_{1}` or :math:`A_{2}` or their adjoints as appropriate. This is often useful for checking the accuracy of a matrix approximation.
+This is often useful for checking the accuracy of a matrix approximation.
 
 Some routines in :mod:`pymatrixid` require estimating the rank of a matrix as well. This can be done with either::
 
->>> k = pymatrixid.estrank(A, eps)
+>>> k = pymatrixid.estimate_rank(A, eps)
 
 or::
 
->>> k = pymatrixid.estrank(m, n, matveca, eps)
+>>> k = pymatrixid.estimate_rank(L, eps)
 
-depending on the representation.
+depending on the representation. The parameter ``eps`` controls the definition of the numerical rank.
 
 Finally, the random number generation required for all randomized routines can be controlled via :func:`pymatrixid.rand`. To reset the seed values to their original values, use::
 
