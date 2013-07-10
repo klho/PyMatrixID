@@ -35,7 +35,7 @@ from pymatrixid import backend
 import numpy as np
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
-_DTYPE_ERROR = TypeError ("invalid data type")
+_DTYPE_ERROR  = TypeError("invalid data type")
 
 def rand(*args):
   """
@@ -145,14 +145,14 @@ def interp_decomp(A, eps_or_k, rand=True):
     Interpolation coefficients.
   :rtype: :class:`numpy.ndarray`
   """
-  try:
-    if   A.dtype ==    'float64': real = True
-    elif A.dtype == 'complex128': real = False
-    else: raise _DTYPE_ERROR
-  except: raise _DTYPE_ERROR
+  if   A.dtype ==    'float64': real = True
+  elif A.dtype == 'complex128': real = False
+  else: raise _DTYPE_ERROR
+  prec = eps_or_k < 1
+  if prec: eps = eps_or_k
+  else:    k = int(eps_or_k)
   if isinstance(A, np.ndarray):
-    if eps_or_k < 1:
-      eps = eps_or_k
+    if prec:
       if rand:
         if real: k, idx, proj = backend.iddp_aid(eps, A)
         else:    k, idx, proj = backend.idzp_aid(eps, A)
@@ -161,7 +161,6 @@ def interp_decomp(A, eps_or_k, rand=True):
         else:    k, idx, proj = backend.idzp_id(eps, A)
       return k, idx - 1, proj
     else:
-      k = int(eps_or_k)
       if rand:
         if real: idx, proj = backend.iddr_aid(A, k)
         else:    idx, proj = backend.idzr_aid(A, k)
@@ -170,15 +169,12 @@ def interp_decomp(A, eps_or_k, rand=True):
         else:    idx, proj = backend.idzr_id(A, k)
       return idx - 1, proj
   elif isinstance(A, LinearOperator):
-    m, n = A.shape
     matveca = A.rmatvec
-    if eps_or_k < 1:
-      eps = eps_or_k
+    if prec:
       if real: k, idx, proj = backend.iddp_rid(eps, m, n, matveca)
       else:    k, idx, proj = backend.idzp_rid(eps, m, n, matveca)
       return k, idx - 1, proj
     else:
-      k = int(eps_or_k)
       if real: idx, proj = backend.iddr_rid(m, n, matveca, k)
       else:    idx, proj = backend.idzr_rid(m, n, matveca, k)
       return idx - 1, proj
@@ -452,14 +448,14 @@ def svd(A, eps_or_k, rand=True):
     Right singular vectors.
   :rtype: :class:`numpy.ndarray`
   """
-  try:
-    if   A.dtype ==    'float64': real = True
-    elif A.dtype == 'complex128': real = False
-    else: raise _DTYPE_ERROR
-  except: raise _DTYPE_ERROR
+  if   A.dtype ==    'float64': real = True
+  elif A.dtype == 'complex128': real = False
+  else: raise _DTYPE_ERROR
+  prec = eps_or_k < 1
+  if prec: eps = eps_or_k
+  else:    k = int(eps_or_k)
   if isinstance(A, np.ndarray):
-    if eps_or_k < 1:
-      eps = eps_or_k
+    if prec:
       if rand:
         if real: U, V, S = backend.iddp_asvd(eps, A)
         else:    U, V, S = backend.idzp_asvd(eps, A)
@@ -467,7 +463,6 @@ def svd(A, eps_or_k, rand=True):
         if real: U, V, S = backend.iddp_svd(eps, A)
         else:    U, V, S = backend.idzp_svd(eps, A)
     else:
-      k = int(eps_or_k)
       if rand:
         if real: U, V, S = backend.iddr_asvd(A, k)
         else:    U, V, S = backend.idzr_asvd(A, k)
@@ -478,12 +473,10 @@ def svd(A, eps_or_k, rand=True):
     m, n = A.shape
     matvec  = lambda x: A.matvec (x)
     matveca = lambda x: A.rmatvec(x)
-    if eps_or_k < 1:
-      eps = eps_or_k
+    if prec:
       if real: U, V, S = backend.iddp_rsvd(eps, m, n, matveca, matvec)
       else:    U, V, S = backend.idzp_rsvd(eps, m, n, matveca, matvec)
     else:
-      k = int(eps_or_k)
       if real: U, V, S = backend.iddr_rsvd(m, n, matveca, matvec, k)
       else:    U, V, S = backend.idzr_rsvd(m, n, matveca, matvec, k)
   else: raise _DTYPE_ERROR

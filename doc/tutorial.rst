@@ -24,7 +24,7 @@ at the Python prompt. This should work if you are in the ``python`` directory; o
 
 in order to tell Python where to look.
 
-Now let's build a matrix. For this, we consider a Hilbert matrix, which is well know to have low rank::
+Now let's build a matrix. For this, we consider a Hilbert matrix, which is well known to have low rank::
 
 >>> from scipy.linalg import hilbert
 >>> n = 1000
@@ -36,8 +36,8 @@ We can also do this explicitly via::
 >>> n = 1000
 >>> A = np.empty((n, n), order='F')
 >>> for j in range(n):
-...     for i in range(m):
-...         A[i,j] = 1. / (i + j + 1)
+>>>     for i in range(m):
+>>>         A[i,j] = 1. / (i + j + 1)
 
 Note the use of the flag ``order='F'`` in :func:`numpy.empty`. This instantiates the matrix in Fortran-contiguous order and is important for avoiding data copying when passing to the backend.
 
@@ -123,7 +123,7 @@ for the interpolation matrix. The ID approximation can then be computed as::
 
 >>> C = np.dot(B, P)
 
-This can also be constructed directly using::
+This can also be constructed using::
 
 >>> C = pymatrixid.reconstruct_matrix_from_id(B, idx, proj)
 
@@ -223,3 +223,6 @@ Remarks
 The above functions all automatically detect the appropriate interface and work with both real and complex data types, passing input arguments to the proper backend routine.
 
 All backend functions can be accessed via the :mod:`pymatrixid.backend` module, which wraps the Fortran functions directly, perhaps with some minor simplification.
+
+.. warning::
+  The ID package appears to break on degenerate matrices (of size zero in at least one dimension) and also on matrices of rank zero (i.e., the zero matrix).

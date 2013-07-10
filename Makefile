@@ -1,7 +1,7 @@
 LIB       = pymatrixid
 ID_LIB    = id_dist
 F2PY      = f2py
-F2PYFLAGS = --fcompiler=gnu95 --link-lapack_opt
+F2PYFLAGS = --fcompiler=gnu95 --link-lapack_opt --opt="-O3"
 PYTHON    = python
 
 SRC      = src

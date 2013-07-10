@@ -242,8 +242,7 @@ def idd_reconid(B, idx, proj):
   :rtype: :class:`numpy.ndarray`
   """
   B = np.asfortranarray(B)
-  if proj.size > 0: return _id.idd_reconid(B, idx, proj)
-  else:             return B[:,np.argsort(idx)]
+  return _id.idd_reconid(B, idx, proj)
 
 def idd_reconint(idx, proj):
   """
@@ -690,7 +689,7 @@ def iddr_aid(A, k):
   m, n = A.shape
   w = iddr_aidi(m, n, k)
   idx, proj = _id.iddr_aid(A, k, w)
-  if k == n: proj = np.array([], dtype='float64', order='F')
+  if k == n: proj = np.empty((k, n-k), order='F')
   else:      proj = proj.reshape((k, n-k), order='F')
   return idx, proj
 
@@ -996,8 +995,7 @@ def idz_reconid(B, idx, proj):
   :rtype: :class:`numpy.ndarray`
   """
   B = np.asfortranarray(B)
-  if proj.size > 0: return _id.idz_reconid(B, idx, proj)
-  else:             return B[:,np.argsort(idx)]
+  return _id.idz_reconid(B, idx, proj)
 
 def idz_reconint(idx, proj):
   """
@@ -1444,7 +1442,7 @@ def idzr_aid(A, k):
   m, n = A.shape
   w = idzr_aidi(m, n, k)
   idx, proj = _id.idzr_aid(A, k, w)
-  if k == n: proj = np.array([], dtype='complex128', order='F')
+  if k == n: proj = np.empty((k, n-k), dtype='complex128', order='F')
   else:      proj = proj.reshape((k, n-k), order='F')
   return idx, proj
 
