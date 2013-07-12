@@ -8,11 +8,9 @@
 #FC=fort77
 #FFLAGS=-O3 -!P
 
-#FC=g77
-#FFLAGS=-O3 -Wno-globals -fno-globals
-
 FC     = gfortran
-FFLAGS = -fPIC -O3
+FFLAGS = -fPIC -Wall -O3
+
 
 
 #
@@ -26,11 +24,12 @@ FFLAGS = -fPIC -O3
 #BLAS_LIB=~/matapprox/id/bin/blas_LINUX.a
 #LAPACK_LIB=~/matapprox/id/bin/lapack_LINUX.a
 
-#BLAS_LIB=~/packages/lapack/lapack-3.1.1_g77/blas_LINUX.a
-#LAPACK_LIB=~/packages/lapack/lapack-3.1.1_g77/lapack_LINUX.a
+#BLAS_LIB=~/packages/lapack/lapack-3.4.2_gfortran/librefblas.a
+#LAPACK_LIB=~/packages/lapack/lapack-3.4.2_gfortran/liblapack.a
 
 BLAS_LIB   = -lblas
 LAPACK_LIB = -llapack
+
 
 
 #
