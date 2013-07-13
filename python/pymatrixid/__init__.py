@@ -169,6 +169,7 @@ def interp_decomp(A, eps_or_k, rand=True):
         else:    idx, proj = backend.idzr_id(A, k)
       return idx - 1, proj
   elif isinstance(A, LinearOperator):
+    m, n = A.shape
     matveca = A.rmatvec
     if prec:
       if real: k, idx, proj = backend.iddp_rid(eps, m, n, matveca)
