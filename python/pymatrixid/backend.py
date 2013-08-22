@@ -416,7 +416,7 @@ def iddr_svd(A, k):
     Singular values.
   :rtype: :class:`numpy.ndarray`
   """
-  A = np.asfortranarray(A)
+  A = A.copy(order='F')
   U, V, S, ier = _id.iddr_svd(A, k)
   if ier != 0: raise _RETCODE_ERROR
   return U, V, S
@@ -442,7 +442,7 @@ def iddp_svd(eps, A):
     Singular values.
   :rtype: :class:`numpy.ndarray`
   """
-  A = np.asfortranarray(A)
+  A = A.copy(order='F')
   m, n = A.shape
   k, iU, iV, iS, w, ier = _id.iddp_svd(eps, A)
   if ier != 0: raise _RETCODE_ERROR
@@ -1169,7 +1169,7 @@ def idzr_svd(A, k):
     Singular values.
   :rtype: :class:`numpy.ndarray`
   """
-  A = np.asfortranarray(A)
+  A = A.copy(order='F')
   U, V, S, ier = _id.idzr_svd(A, k)
   if ier != 0: raise _RETCODE_ERROR
   return U, V, S
@@ -1195,7 +1195,7 @@ def idzp_svd(eps, A):
     Singular values.
   :rtype: :class:`numpy.ndarray`
   """
-  A = np.asfortranarray(A)
+  A = A.copy(order='F')
   m, n = A.shape
   k, iU, iV, iS, w, ier = _id.idzp_svd(eps, A)
   if ier != 0: raise _RETCODE_ERROR
