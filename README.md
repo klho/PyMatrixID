@@ -11,5 +11,4 @@ The ID software package by Martinsson, Rokhlin, Shkolnisky, and Tygert is a Fort
 
 PyMatrixID is freely available under the BSD license; for alternate licenses, please contact the author.
 
-.. note::
-   PyMatrixID has been merged into SciPy 0.13 (in a slightly modified form) as ``scipy.linalg.interpolative`` by Andreas Klöckner and Pauli Virtanen. It is highly recommended to henceforth use that package instead.
+**Note**: PyMatrixID has been merged into SciPy 0.13 (in a slightly modified form) as ``scipy.linalg.interpolative`` by Andreas Klöckner and Pauli Virtanen. It is highly recommended to henceforth use that package instead.
