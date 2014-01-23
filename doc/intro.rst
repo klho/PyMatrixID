@@ -21,6 +21,9 @@ If :math:`A` does not have exact rank :math:`k`, then there exists an approximat
 - it preserves the structure of :math:`A`; and
 - it is more efficient to compute with in light of the identity submatrix of :math:`P`.
 
+.. note::
+   PyMatrixID has been merged into SciPy 0.13 (in a slightly modified form) as :mod:`scipy.linalg.interpolative` by Andreas Klöckner and Pauli Virtanen. It is highly recommended to henceforth use that package instead.
+
 Overview
 --------
 
