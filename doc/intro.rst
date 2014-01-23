@@ -27,7 +27,7 @@ If :math:`A` does not have exact rank :math:`k`, then there exists an approximat
 Overview
 --------
 
-The ID software package [4]_ by Martinsson, Rokhlin, Shkolnisky, and Tygert is a Fortran library to compute IDs using various algorithms, including the rank-revealing QR approach of [1]_ and the more recent randomized methods described in [2]_, [3]_, and [5]_. PyMatrixID is a Python wrapper for this package that exposes its functionality in a more convenient manner. Note that PyMatrixID does not add any functionality beyond that of organizing a simpler and more consistent interface.
+The ID software package [4]_ by Martinsson, Rokhlin, Shkolnisky, and Tygert is a Fortran library to compute IDs using various algorithms, including the deterministic pivoted QR approach of [1]_ and the more recent randomized methods described in [2]_, [3]_, and [5]_. PyMatrixID is a Python wrapper for this package that exposes its functionality in a more convenient manner. Note that PyMatrixID does not add any functionality beyond that of organizing a simpler and more consistent interface.
 
 We advise the user to consult also the documentation for the ID package, which is included in full as part of PyMatrixID.
 
