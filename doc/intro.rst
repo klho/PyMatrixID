@@ -47,6 +47,6 @@ References
 
 .. [3] P.G. Martinsson, V. Rokhlin, M. Tygert. A randomized algorithm for the decomposition of matrices. `Appl. Comput. Harmon. Anal.` 30 (1): 47--68,  2011. `doi:10.1016/j.acha.2010.02.003 <http://dx.doi.org/10.1016/j.acha.2010.02.003>`_.
 
-.. [4] P.G. Martinsson, V. Rokhlin, Y. Shkolnisky, M. Tygert. ID: a software package for low-rank approximation of matrices via interpolative decompositions, version 0.2. http://cims.nyu.edu/~tygert/id_doc.pdf.
+.. [4] P.G. Martinsson, V. Rokhlin, Y. Shkolnisky, M. Tygert. ID: a software package for low-rank approximation of matrices via interpolative decompositions, version 0.3. http://cims.nyu.edu/~tygert/id_doc.pdf.
 
 .. [5] F.\  Woolfe, E. Liberty, V. Rokhlin, M. Tygert. A fast randomized algorithm for the approximation of matrices. `Appl. Comput. Harmon. Anal.` 25 (3): 335--366, 2008. `doi:10.1016/j.acha.2007.12.002 <http://dx.doi.org/10.1016/j.acha.2007.12.002>`_.
