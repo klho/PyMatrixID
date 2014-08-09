@@ -201,7 +201,7 @@ or::
 
 >>> k = pymatrixid.estimate_rank(L, eps)
 
-depending on the representation. The parameter ``eps`` controls the definition of the numerical rank.
+depending on the representation. The parameter ``eps`` specifies the relative precision to which the rank is computed.
 
 Finally, the random number generation required for all randomized routines can be controlled via :func:`pymatrixid.rand`. To reset the seed values to their original values, use::
 

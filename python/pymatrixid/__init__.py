@@ -1,5 +1,5 @@
 #*******************************************************************************
-#   Copyright (C) 2013 Kenneth L. Ho
+#   Copyright (C) 2013-2014 Kenneth L. Ho
 #
 #   Redistribution and use in source and binary forms, with or without
 #   modification, are permitted provided that the following conditions are met:
@@ -36,6 +36,23 @@ import numpy as np
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 _DTYPE_ERROR  = TypeError("invalid data type")
+
+def _is_real(A):
+  """
+  Check if matrix is real.
+
+  :param A:
+    Matrix, given as either a :class:`numpy.ndarray` or a :class:`scipy.sparse.linalg.LinearOperator`.
+
+  :return:
+    Whether matrix is real.
+  :rtype: bool
+  """
+  try:
+    if   A.dtype == np.   float64: return True
+    elif A.dtype == np.complex128: return False
+    else: raise _DTYPE_ERROR
+  except: raise _DTYPE_ERROR
 
 def rand(*args):
   """
@@ -145,9 +162,7 @@ def interp_decomp(A, eps_or_k, rand=True):
     Interpolation coefficients.
   :rtype: :class:`numpy.ndarray`
   """
-  if   A.dtype ==    'float64': real = True
-  elif A.dtype == 'complex128': real = False
-  else: raise _DTYPE_ERROR
+  real = _is_real(A)
   prec = eps_or_k < 1
   if prec: eps = eps_or_k
   else:    k = int(eps_or_k)
@@ -449,9 +464,7 @@ def svd(A, eps_or_k, rand=True):
     Right singular vectors.
   :rtype: :class:`numpy.ndarray`
   """
-  if   A.dtype ==    'float64': real = True
-  elif A.dtype == 'complex128': real = False
-  else: raise _DTYPE_ERROR
+  real = _is_real(A)
   prec = eps_or_k < 1
   if prec: eps = eps_or_k
   else:    k = int(eps_or_k)
@@ -511,14 +524,12 @@ def estimate_rank(A, eps):
     Estimated matrix rank.
   :rtype: int
   """
-  try:
-    if   A.dtype ==    'float64': real = True
-    elif A.dtype == 'complex128': real = False
-    else: raise _DTYPE_ERROR
-  except: raise _DTYPE_ERROR
+  real = _is_real(A)
   if isinstance(A, np.ndarray):
-    if real: return backend.idd_estrank(eps, A)
-    else:    return backend.idz_estrank(eps, A)
+    if real: rank = backend.idd_estrank(eps, A)
+    else:    rank = backend.idz_estrank(eps, A)
+    if rank == 0: rank = min(A.shape)
+    return rank
   elif isinstance(A, LinearOperator):
     m, n = A.shape
     matveca = A.rmatvec
