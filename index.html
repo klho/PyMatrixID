@@ -19,7 +19,30 @@
     </section>
 
     <section class="main-content">
-      <p>Documentation: <a href="doc/html/index.html">HTML</a>, <a href="doc/PyMatrixID.pdf">PDF</a></p>
+      <h1>
+<a id="pymatrixid" class="anchor" href="#pymatrixid" aria-hidden="true"><span class="octicon octicon-link"></span></a>PyMatrixID</h1>
+
+<p>An interpolative decomposition (ID) of a matrix is a factorization as a product of a skeleton matrix consisting of a subset of columns and an interpolation matrix containing the identity. Like the singular value decomposition (SVD), the ID is a powerful approximation tool. The principal advantages of using an ID instead of an SVD are that:</p>
+
+<ul>
+<li>it is cheaper to construct;</li>
+<li>it preserves the matrix structure; and</li>
+<li>it is more efficient to compute with in light of the structure of the interpolation matrix.</li>
+</ul>
+
+<p>The ID software package by Martinsson, Rokhlin, Shkolnisky, and Tygert is a Fortran library to compute IDs using various algorithms, including the deterministic pivoted QR approach and more recent randomized methods. PyMatrixID is a Python wrapper for this package that exposes its functionality in a more convenient manner. Note that PyMatrixID does not add any functionality beyond that of organizing a simpler and more consistent interface.</p>
+
+<p>PyMatrixID is freely available under the BSD license; for alternate licenses, please contact the author.</p>
+
+<p><strong>Note</strong>: PyMatrixID has been merged into SciPy 0.13 (in a slightly modified form) as <code>scipy.linalg.interpolative</code> by Andreas Klöckner and Pauli Virtanen. It is highly recommended to henceforth use that package instead.</p>
+
+<h2>
+<a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h2>
+
+<ul>
+<li><a href="doc/html/index.html">HTML</a></li>
+<li><a href="doc/PyMatrixID.pdf">PDF</a></li>
+</ul>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/klho/PyMatrixID">PyMatrixID</a> is maintained by <a href="https://github.com/klho">klho</a>.</span>
