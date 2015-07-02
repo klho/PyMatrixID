@@ -1,0 +1,2217 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Python API &mdash; PyMatrixID 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="PyMatrixID 0.1 documentation" href="index.html" />
+    <link rel="prev" title="Tutorial" href="tutorial.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PyMatrixID 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="python-api">
+<h1>Python API<a class="headerlink" href="#python-api" title="Permalink to this headline">¶</a></h1>
+<p>This section provides the auto-generated API for the Python modules <a class="reference internal" href="#module-pymatrixid" title="pymatrixid"><tt class="xref py py-mod docutils literal"><span class="pre">pymatrixid</span></tt></a> and <a class="reference internal" href="#module-pymatrixid.backend" title="pymatrixid.backend"><tt class="xref py py-mod docutils literal"><span class="pre">pymatrixid.backend</span></tt></a>. The functions in <a class="reference internal" href="#module-pymatrixid.backend" title="pymatrixid.backend"><tt class="xref py py-mod docutils literal"><span class="pre">pymatrixid.backend</span></tt></a> are wrappers for the routines of the same name in the Fortran ID software package; for details, please consult the Fortran source code (in <tt class="docutils literal"><span class="pre">external/id_dist/src</span></tt>).</p>
+<div class="section" id="module-pymatrixid">
+<span id="pymatrixid"></span><h2>pymatrixid<a class="headerlink" href="#module-pymatrixid" title="Permalink to this headline">¶</a></h2>
+<p>Python module for interfacing with <cite>id_dist</cite>.</p>
+<dl class="function">
+<dt id="pymatrixid.estimate_rank">
+<tt class="descclassname">pymatrixid.</tt><tt class="descname">estimate_rank</tt><big>(</big><em>A</em>, <em>eps</em><big>)</big><a class="headerlink" href="#pymatrixid.estimate_rank" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimate matrix rank to a specified relative precision using randomized
+methods.</p>
+<p>The matrix <cite>A</cite> can be given as either a <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a> or a
+<a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v0.13.0)"><tt class="xref py py-class docutils literal"><span class="pre">scipy.sparse.linalg.LinearOperator</span></tt></a>, with different algorithms used
+for each case. If <cite>A</cite> is of type <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>, then the output rank
+is typically about 8 higher than the actual numerical rank.</p>
+<p>This function automatically detects the form of the input parameters and
+passes them to the appropriate backend. For details,
+see <a class="reference internal" href="#pymatrixid.backend.idd_estrank" title="pymatrixid.backend.idd_estrank"><tt class="xref py py-func docutils literal"><span class="pre">backend.idd_estrank()</span></tt></a>, <a class="reference internal" href="#pymatrixid.backend.idd_findrank" title="pymatrixid.backend.idd_findrank"><tt class="xref py py-func docutils literal"><span class="pre">backend.idd_findrank()</span></tt></a>,
+<a class="reference internal" href="#pymatrixid.backend.idz_estrank" title="pymatrixid.backend.idz_estrank"><tt class="xref py py-func docutils literal"><span class="pre">backend.idz_estrank()</span></tt></a>, and <a class="reference internal" href="#pymatrixid.backend.idz_findrank" title="pymatrixid.backend.idz_findrank"><tt class="xref py py-func docutils literal"><span class="pre">backend.idz_findrank()</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a> or <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v0.13.0)"><tt class="xref py py-class docutils literal"><span class="pre">scipy.sparse.linalg.LinearOperator</span></tt></a>) &#8211; Matrix whose rank is to be estimated, given as either a
+<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a> or a <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v0.13.0)"><tt class="xref py py-class docutils literal"><span class="pre">scipy.sparse.linalg.LinearOperator</span></tt></a> with
+the <cite>rmatvec</cite> method (to apply the matrix adjoint).</li>
+<li><strong>eps</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Relative error for numerical rank definition.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Estimated matrix rank.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.estimate_spectral_norm">
+<tt class="descclassname">pymatrixid.</tt><tt class="descname">estimate_spectral_norm</tt><big>(</big><em>A</em>, <em>its=20</em><big>)</big><a class="headerlink" href="#pymatrixid.estimate_spectral_norm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimate spectral norm of a matrix by the randomized power method.</p>
+<p>This function automatically detects the matrix data type and calls the
+appropriate backend. For details, see <a class="reference internal" href="#pymatrixid.backend.idd_snorm" title="pymatrixid.backend.idd_snorm"><tt class="xref py py-func docutils literal"><span class="pre">backend.idd_snorm()</span></tt></a> and
+<a class="reference internal" href="#pymatrixid.backend.idz_snorm" title="pymatrixid.backend.idz_snorm"><tt class="xref py py-func docutils literal"><span class="pre">backend.idz_snorm()</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v0.13.0)"><tt class="xref py py-class docutils literal"><span class="pre">scipy.sparse.linalg.LinearOperator</span></tt></a>) &#8211; Matrix given as a <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v0.13.0)"><tt class="xref py py-class docutils literal"><span class="pre">scipy.sparse.linalg.LinearOperator</span></tt></a> with the
+<cite>matvec</cite> and <cite>rmatvec</cite> methods (to apply the matrix and its adjoint).</li>
+<li><strong>its</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Number of power method iterations.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Spectral norm estimate.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.estimate_spectral_norm_diff">
+<tt class="descclassname">pymatrixid.</tt><tt class="descname">estimate_spectral_norm_diff</tt><big>(</big><em>A</em>, <em>B</em>, <em>its=20</em><big>)</big><a class="headerlink" href="#pymatrixid.estimate_spectral_norm_diff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimate spectral norm of the difference of two matrices by the randomized
+power method.</p>
+<p>This function automatically detects the matrix data type and calls the
+appropriate backend. For details, see <a class="reference internal" href="#pymatrixid.backend.idd_diffsnorm" title="pymatrixid.backend.idd_diffsnorm"><tt class="xref py py-func docutils literal"><span class="pre">backend.idd_diffsnorm()</span></tt></a> and
+<a class="reference internal" href="#pymatrixid.backend.idz_diffsnorm" title="pymatrixid.backend.idz_diffsnorm"><tt class="xref py py-func docutils literal"><span class="pre">backend.idz_diffsnorm()</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v0.13.0)"><tt class="xref py py-class docutils literal"><span class="pre">scipy.sparse.linalg.LinearOperator</span></tt></a>) &#8211; First matrix given as a <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v0.13.0)"><tt class="xref py py-class docutils literal"><span class="pre">scipy.sparse.linalg.LinearOperator</span></tt></a> with the
+<cite>matvec</cite> and <cite>rmatvec</cite> methods (to apply the matrix and its adjoint).</li>
+<li><strong>B</strong> (<a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v0.13.0)"><tt class="xref py py-class docutils literal"><span class="pre">scipy.sparse.linalg.LinearOperator</span></tt></a>) &#8211; Second matrix given as a <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v0.13.0)"><tt class="xref py py-class docutils literal"><span class="pre">scipy.sparse.linalg.LinearOperator</span></tt></a> with
+the <cite>matvec</cite> and <cite>rmatvec</cite> methods (to apply the matrix and its adjoint).</li>
+<li><strong>its</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Number of power method iterations.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Spectral norm estimate of matrix difference.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.id_to_svd">
+<tt class="descclassname">pymatrixid.</tt><tt class="descname">id_to_svd</tt><big>(</big><em>B</em>, <em>idx</em>, <em>proj</em><big>)</big><a class="headerlink" href="#pymatrixid.id_to_svd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert ID to SVD.</p>
+<p>The SVD reconstruction of a matrix with skeleton matrix <cite>B</cite> and ID indices and
+coefficients <cite>idx</cite> and <cite>proj</cite>, respectively, is:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">U</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">id_to_svd</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">proj</span><span class="p">)</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">S</span><span class="p">),</span> <span class="n">V</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>See also <a class="reference internal" href="#pymatrixid.svd" title="pymatrixid.svd"><tt class="xref py py-func docutils literal"><span class="pre">svd()</span></tt></a>.</p>
+<p>This function automatically detects the matrix data type and calls the
+appropriate backend. For details, see <a class="reference internal" href="#pymatrixid.backend.idd_id2svd" title="pymatrixid.backend.idd_id2svd"><tt class="xref py py-func docutils literal"><span class="pre">backend.idd_id2svd()</span></tt></a> and
+<a class="reference internal" href="#pymatrixid.backend.idz_id2svd" title="pymatrixid.backend.idz_id2svd"><tt class="xref py py-func docutils literal"><span class="pre">backend.idz_id2svd()</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>B</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Skeleton matrix.</li>
+<li><strong>idx</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Column index array.</li>
+<li><strong>proj</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Interpolation coefficients.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Left singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Singular values.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Right singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.interp_decomp">
+<tt class="descclassname">pymatrixid.</tt><tt class="descname">interp_decomp</tt><big>(</big><em>A</em>, <em>eps_or_k</em>, <em>rand=True</em><big>)</big><a class="headerlink" href="#pymatrixid.interp_decomp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute ID of a matrix.</p>
+<p>An ID of a matrix <cite>A</cite> is a factorization defined by a rank <cite>k</cite>, a column index
+array <cite>idx</cite>, and interpolation coefficients <cite>proj</cite> such that:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="p">[:,</span><span class="n">idx</span><span class="p">[:</span><span class="n">k</span><span class="p">]],</span> <span class="n">proj</span><span class="p">)</span> <span class="o">=</span> <span class="n">A</span><span class="p">[:,</span><span class="n">idx</span><span class="p">[</span><span class="n">k</span><span class="p">:]]</span>
+</pre></div>
+</div>
+<p>The original matrix can then be reconstructed as:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">A</span><span class="p">[:,</span><span class="n">idx</span><span class="p">[:</span><span class="n">k</span><span class="p">]],</span>
+              <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="p">[:,</span><span class="n">idx</span><span class="p">[:</span><span class="n">k</span><span class="p">]],</span> <span class="n">proj</span><span class="p">)]</span>
+            <span class="p">)[:,</span><span class="n">numpy</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">idx</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>or via the routine <a class="reference internal" href="#pymatrixid.reconstruct_matrix_from_id" title="pymatrixid.reconstruct_matrix_from_id"><tt class="xref py py-func docutils literal"><span class="pre">reconstruct_matrix_from_id()</span></tt></a>. This can equivalently
+be written as:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="p">[:,</span><span class="n">idx</span><span class="p">[:</span><span class="n">k</span><span class="p">]],</span>
+          <span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">numpy</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">proj</span><span class="p">])</span>
+         <span class="p">)[:,</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">idx</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>in terms of the skeleton and interpolation matrices:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="p">[:,</span><span class="n">idx</span><span class="p">[:</span><span class="n">k</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>and:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">P</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">numpy</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">proj</span><span class="p">])[:,</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">idx</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>respectively. See also <a class="reference internal" href="#pymatrixid.reconstruct_interp_matrix" title="pymatrixid.reconstruct_interp_matrix"><tt class="xref py py-func docutils literal"><span class="pre">reconstruct_interp_matrix()</span></tt></a> and
+<a class="reference internal" href="#pymatrixid.reconstruct_skel_matrix" title="pymatrixid.reconstruct_skel_matrix"><tt class="xref py py-func docutils literal"><span class="pre">reconstruct_skel_matrix()</span></tt></a>.</p>
+<p>The ID can be computed to any relative precision or rank (depending on the
+value of <cite>eps_or_k</cite>). If a precision is specified (<cite>eps_or_k &lt; 1</cite>), then this
+function has the output signature:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">k</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">proj</span> <span class="o">=</span> <span class="n">interp_decomp</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">eps_or_k</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Otherwise, if a rank is specified (<cite>eps_or_k &gt;= 1</cite>), then the output signature
+is:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">idx</span><span class="p">,</span> <span class="n">proj</span> <span class="o">=</span> <span class="n">interp_decomp</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">eps_or_k</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This function automatically detects the form of the input parameters and
+passes them to the appropriate backend. For details, see
+<a class="reference internal" href="#pymatrixid.backend.iddp_id" title="pymatrixid.backend.iddp_id"><tt class="xref py py-func docutils literal"><span class="pre">backend.iddp_id()</span></tt></a>, <a class="reference internal" href="#pymatrixid.backend.iddp_aid" title="pymatrixid.backend.iddp_aid"><tt class="xref py py-func docutils literal"><span class="pre">backend.iddp_aid()</span></tt></a>, <a class="reference internal" href="#pymatrixid.backend.iddp_rid" title="pymatrixid.backend.iddp_rid"><tt class="xref py py-func docutils literal"><span class="pre">backend.iddp_rid()</span></tt></a>,
+<a class="reference internal" href="#pymatrixid.backend.iddr_id" title="pymatrixid.backend.iddr_id"><tt class="xref py py-func docutils literal"><span class="pre">backend.iddr_id()</span></tt></a>, <a class="reference internal" href="#pymatrixid.backend.iddr_aid" title="pymatrixid.backend.iddr_aid"><tt class="xref py py-func docutils literal"><span class="pre">backend.iddr_aid()</span></tt></a>, <a class="reference internal" href="#pymatrixid.backend.iddr_rid" title="pymatrixid.backend.iddr_rid"><tt class="xref py py-func docutils literal"><span class="pre">backend.iddr_rid()</span></tt></a>,
+<a class="reference internal" href="#pymatrixid.backend.idzp_id" title="pymatrixid.backend.idzp_id"><tt class="xref py py-func docutils literal"><span class="pre">backend.idzp_id()</span></tt></a>, <a class="reference internal" href="#pymatrixid.backend.idzp_aid" title="pymatrixid.backend.idzp_aid"><tt class="xref py py-func docutils literal"><span class="pre">backend.idzp_aid()</span></tt></a>, <a class="reference internal" href="#pymatrixid.backend.idzp_rid" title="pymatrixid.backend.idzp_rid"><tt class="xref py py-func docutils literal"><span class="pre">backend.idzp_rid()</span></tt></a>,
+<a class="reference internal" href="#pymatrixid.backend.idzr_id" title="pymatrixid.backend.idzr_id"><tt class="xref py py-func docutils literal"><span class="pre">backend.idzr_id()</span></tt></a>, <a class="reference internal" href="#pymatrixid.backend.idzr_aid" title="pymatrixid.backend.idzr_aid"><tt class="xref py py-func docutils literal"><span class="pre">backend.idzr_aid()</span></tt></a>, and
+<a class="reference internal" href="#pymatrixid.backend.idzr_rid" title="pymatrixid.backend.idzr_rid"><tt class="xref py py-func docutils literal"><span class="pre">backend.idzr_rid()</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a> or <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v0.13.0)"><tt class="xref py py-class docutils literal"><span class="pre">scipy.sparse.linalg.LinearOperator</span></tt></a>) &#8211; Matrix to be factored, given as either a <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a> or a
+<a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v0.13.0)"><tt class="xref py py-class docutils literal"><span class="pre">scipy.sparse.linalg.LinearOperator</span></tt></a> with the <cite>rmatvec</cite> method (to
+apply the matrix adjoint).</li>
+<li><strong>eps_or_k</strong> (<em>float or int</em>) &#8211; Relative error (if <cite>eps_or_k &lt; 1</cite>) or rank (if <cite>eps_or_k &gt;= 1</cite>) of
+approximation.</li>
+<li><strong>rand</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Whether to use random sampling if <cite>A</cite> is of type <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>
+(randomized algorithms are always used if <cite>A</cite> is of type
+<a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v0.13.0)"><tt class="xref py py-class docutils literal"><span class="pre">scipy.sparse.linalg.LinearOperator</span></tt></a>).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Rank required to achieve specified relative precision if
+<cite>eps_or_k &lt; 1</cite>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Column index array.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Interpolation coefficients.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.rand">
+<tt class="descclassname">pymatrixid.</tt><tt class="descname">rand</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#pymatrixid.rand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate standard uniform pseudorandom numbers via a very efficient lagged
+Fibonacci method.</p>
+<p>This routine is used for all random number generation in this package and can
+affect ID and SVD results.</p>
+<p>Several call signatures are available:</p>
+<ul class="simple">
+<li>If no arguments are given, then the seed values are reset to their original
+values.</li>
+<li>If an integer <cite>n</cite> is given as input, then an array of <cite>n</cite> pseudorandom
+numbers are returned.</li>
+<li>If an array <cite>s</cite> of 55 values is given as input, then the seed values are
+set to <cite>s</cite>.</li>
+</ul>
+<p>For details, see <a class="reference internal" href="#pymatrixid.backend.id_srand" title="pymatrixid.backend.id_srand"><tt class="xref py py-func docutils literal"><span class="pre">backend.id_srand()</span></tt></a>, <a class="reference internal" href="#pymatrixid.backend.id_srandi" title="pymatrixid.backend.id_srandi"><tt class="xref py py-func docutils literal"><span class="pre">backend.id_srandi()</span></tt></a>, and
+<a class="reference internal" href="#pymatrixid.backend.id_srando" title="pymatrixid.backend.id_srando"><tt class="xref py py-func docutils literal"><span class="pre">backend.id_srando()</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.reconstruct_interp_matrix">
+<tt class="descclassname">pymatrixid.</tt><tt class="descname">reconstruct_interp_matrix</tt><big>(</big><em>idx</em>, <em>proj</em><big>)</big><a class="headerlink" href="#pymatrixid.reconstruct_interp_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct interpolation matrix from ID.</p>
+<p>The interpolation matrix can be reconstructed from the ID indices and
+coefficients <cite>idx</cite> and <cite>proj</cite>, respectively, as:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">P</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">numpy</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">proj</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">proj</span><span class="p">])[:,</span><span class="n">numpy</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">idx</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>The original matrix can then be reconstructed from its skeleton matrix <cite>B</cite>
+via:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See also <a class="reference internal" href="#pymatrixid.reconstruct_matrix_from_id" title="pymatrixid.reconstruct_matrix_from_id"><tt class="xref py py-func docutils literal"><span class="pre">reconstruct_matrix_from_id()</span></tt></a> and
+<a class="reference internal" href="#pymatrixid.reconstruct_skel_matrix" title="pymatrixid.reconstruct_skel_matrix"><tt class="xref py py-func docutils literal"><span class="pre">reconstruct_skel_matrix()</span></tt></a>.</p>
+<p>This function automatically detects the matrix data type and calls the
+appropriate backend. For details, see <a class="reference internal" href="#pymatrixid.backend.idd_reconint" title="pymatrixid.backend.idd_reconint"><tt class="xref py py-func docutils literal"><span class="pre">backend.idd_reconint()</span></tt></a> and
+<a class="reference internal" href="#pymatrixid.backend.idz_reconint" title="pymatrixid.backend.idz_reconint"><tt class="xref py py-func docutils literal"><span class="pre">backend.idz_reconint()</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>idx</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Column index array.</li>
+<li><strong>proj</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Interpolation coefficients.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Interpolation matrix.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.reconstruct_matrix_from_id">
+<tt class="descclassname">pymatrixid.</tt><tt class="descname">reconstruct_matrix_from_id</tt><big>(</big><em>B</em>, <em>idx</em>, <em>proj</em><big>)</big><a class="headerlink" href="#pymatrixid.reconstruct_matrix_from_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct matrix from its ID.</p>
+<p>A matrix <cite>A</cite> with skeleton matrix <cite>B</cite> and ID indices and coefficients <cite>idx</cite>
+and <cite>proj</cite>, respectively, can be reconstructed as:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">B</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">proj</span><span class="p">)])[:,</span><span class="n">numpy</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">idx</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>See also <a class="reference internal" href="#pymatrixid.reconstruct_interp_matrix" title="pymatrixid.reconstruct_interp_matrix"><tt class="xref py py-func docutils literal"><span class="pre">reconstruct_interp_matrix()</span></tt></a> and
+<a class="reference internal" href="#pymatrixid.reconstruct_skel_matrix" title="pymatrixid.reconstruct_skel_matrix"><tt class="xref py py-func docutils literal"><span class="pre">reconstruct_skel_matrix()</span></tt></a>.</p>
+<p>This function automatically detects the matrix data type and calls the
+appropriate backend. For details, see <a class="reference internal" href="#pymatrixid.backend.idd_reconid" title="pymatrixid.backend.idd_reconid"><tt class="xref py py-func docutils literal"><span class="pre">backend.idd_reconid()</span></tt></a> and
+<a class="reference internal" href="#pymatrixid.backend.idz_reconid" title="pymatrixid.backend.idz_reconid"><tt class="xref py py-func docutils literal"><span class="pre">backend.idz_reconid()</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>B</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Skeleton matrix.</li>
+<li><strong>idx</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Column index array.</li>
+<li><strong>proj</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Interpolation coefficients.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Reconstructed matrix.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.reconstruct_skel_matrix">
+<tt class="descclassname">pymatrixid.</tt><tt class="descname">reconstruct_skel_matrix</tt><big>(</big><em>A</em>, <em>k</em>, <em>idx</em><big>)</big><a class="headerlink" href="#pymatrixid.reconstruct_skel_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct skeleton matrix from ID.</p>
+<p>The skeleton matrix can be reconstructed from the original matrix <cite>A</cite> and its
+ID rank and indices <cite>k</cite> and <cite>idx</cite>, respectively, as:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="p">[:,</span><span class="n">idx</span><span class="p">[:</span><span class="n">k</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>The original matrix can then be reconstructed via:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">B</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">proj</span><span class="p">)])[:,</span><span class="n">numpy</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">idx</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>See also <a class="reference internal" href="#pymatrixid.reconstruct_matrix_from_id" title="pymatrixid.reconstruct_matrix_from_id"><tt class="xref py py-func docutils literal"><span class="pre">reconstruct_matrix_from_id()</span></tt></a> and
+<a class="reference internal" href="#pymatrixid.reconstruct_interp_matrix" title="pymatrixid.reconstruct_interp_matrix"><tt class="xref py py-func docutils literal"><span class="pre">reconstruct_interp_matrix()</span></tt></a>.</p>
+<p>This function automatically detects the matrix data type and calls the
+appropriate backend. For details, see <a class="reference internal" href="#pymatrixid.backend.idd_copycols" title="pymatrixid.backend.idd_copycols"><tt class="xref py py-func docutils literal"><span class="pre">backend.idd_copycols()</span></tt></a> and
+<a class="reference internal" href="#pymatrixid.backend.idz_copycols" title="pymatrixid.backend.idz_copycols"><tt class="xref py py-func docutils literal"><span class="pre">backend.idz_copycols()</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Original matrix.</li>
+<li><strong>k</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Rank of ID.</li>
+<li><strong>idx</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Column index array.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Skeleton matrix.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.svd">
+<tt class="descclassname">pymatrixid.</tt><tt class="descname">svd</tt><big>(</big><em>A</em>, <em>eps_or_k</em>, <em>rand=True</em><big>)</big><a class="headerlink" href="#pymatrixid.svd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute SVD of a matrix via an ID.</p>
+<p>An SVD of a matrix <cite>A</cite> is a factorization:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">A</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">S</span><span class="p">),</span> <span class="n">V</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>where <cite>U</cite> and <cite>V</cite> have orthonormal columns and <cite>S</cite> is nonnegative.</p>
+<p>The SVD can be computed to any relative precision or rank (depending on the
+value of <cite>eps_or_k</cite>).</p>
+<p>See also <a class="reference internal" href="#pymatrixid.interp_decomp" title="pymatrixid.interp_decomp"><tt class="xref py py-func docutils literal"><span class="pre">interp_decomp()</span></tt></a> and <a class="reference internal" href="#pymatrixid.id_to_svd" title="pymatrixid.id_to_svd"><tt class="xref py py-func docutils literal"><span class="pre">id_to_svd()</span></tt></a>.</p>
+<p>This function automatically detects the form of the input parameters and
+passes them to the appropriate backend. For details, see
+<a class="reference internal" href="#pymatrixid.backend.iddp_svd" title="pymatrixid.backend.iddp_svd"><tt class="xref py py-func docutils literal"><span class="pre">backend.iddp_svd()</span></tt></a>, <a class="reference internal" href="#pymatrixid.backend.iddp_asvd" title="pymatrixid.backend.iddp_asvd"><tt class="xref py py-func docutils literal"><span class="pre">backend.iddp_asvd()</span></tt></a>,
+<a class="reference internal" href="#pymatrixid.backend.iddp_rsvd" title="pymatrixid.backend.iddp_rsvd"><tt class="xref py py-func docutils literal"><span class="pre">backend.iddp_rsvd()</span></tt></a>, <a class="reference internal" href="#pymatrixid.backend.iddr_svd" title="pymatrixid.backend.iddr_svd"><tt class="xref py py-func docutils literal"><span class="pre">backend.iddr_svd()</span></tt></a>,
+<a class="reference internal" href="#pymatrixid.backend.iddr_asvd" title="pymatrixid.backend.iddr_asvd"><tt class="xref py py-func docutils literal"><span class="pre">backend.iddr_asvd()</span></tt></a>, <a class="reference internal" href="#pymatrixid.backend.iddr_rsvd" title="pymatrixid.backend.iddr_rsvd"><tt class="xref py py-func docutils literal"><span class="pre">backend.iddr_rsvd()</span></tt></a>,
+<a class="reference internal" href="#pymatrixid.backend.idzp_svd" title="pymatrixid.backend.idzp_svd"><tt class="xref py py-func docutils literal"><span class="pre">backend.idzp_svd()</span></tt></a>, <a class="reference internal" href="#pymatrixid.backend.idzp_asvd" title="pymatrixid.backend.idzp_asvd"><tt class="xref py py-func docutils literal"><span class="pre">backend.idzp_asvd()</span></tt></a>,
+<a class="reference internal" href="#pymatrixid.backend.idzp_rsvd" title="pymatrixid.backend.idzp_rsvd"><tt class="xref py py-func docutils literal"><span class="pre">backend.idzp_rsvd()</span></tt></a>, <a class="reference internal" href="#pymatrixid.backend.idzr_svd" title="pymatrixid.backend.idzr_svd"><tt class="xref py py-func docutils literal"><span class="pre">backend.idzr_svd()</span></tt></a>,
+<a class="reference internal" href="#pymatrixid.backend.idzr_asvd" title="pymatrixid.backend.idzr_asvd"><tt class="xref py py-func docutils literal"><span class="pre">backend.idzr_asvd()</span></tt></a>, and <a class="reference internal" href="#pymatrixid.backend.idzr_rsvd" title="pymatrixid.backend.idzr_rsvd"><tt class="xref py py-func docutils literal"><span class="pre">backend.idzr_rsvd()</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a> or <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v0.13.0)"><tt class="xref py py-class docutils literal"><span class="pre">scipy.sparse.linalg.LinearOperator</span></tt></a>) &#8211; Matrix to be factored, given as either a <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a> or a
+<a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v0.13.0)"><tt class="xref py py-class docutils literal"><span class="pre">scipy.sparse.linalg.LinearOperator</span></tt></a> with the <cite>matvec</cite> and <cite>rmatvec</cite>
+methods (to apply the matrix and its adjoint).</li>
+<li><strong>eps_or_k</strong> (<em>float or int</em>) &#8211; Relative error (if <cite>eps_or_k &lt; 1</cite>) or rank (if <cite>eps_or_k &gt;= 1</cite>) of
+approximation.</li>
+<li><strong>rand</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Whether to use random sampling if <cite>A</cite> is of type <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>
+(randomized algorithms are always used if <cite>A</cite> is of type
+<a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v0.13.0)"><tt class="xref py py-class docutils literal"><span class="pre">scipy.sparse.linalg.LinearOperator</span></tt></a>).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Left singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Singular values.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Right singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pymatrixid.backend">
+<span id="pymatrixid-backend"></span><h2>pymatrixid.backend<a class="headerlink" href="#module-pymatrixid.backend" title="Permalink to this headline">¶</a></h2>
+<p>Direct wrappers for Fortran <cite>id_dist</cite> backend.</p>
+<dl class="function">
+<dt id="pymatrixid.backend.id_srand">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">id_srand</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.id_srand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate standard uniform pseudorandom numbers via a very efficient lagged
+Fibonacci method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Number of pseudorandom numbers to generate.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Pseudorandom numbers.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.id_srandi">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">id_srandi</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.id_srandi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize seed values for <a class="reference internal" href="#pymatrixid.backend.id_srand" title="pymatrixid.backend.id_srand"><tt class="xref py py-func docutils literal"><span class="pre">id_srand()</span></tt></a> (any appropriately random numbers
+will do).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>t</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Array of 55 seed values.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.id_srando">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">id_srando</tt><big>(</big><big>)</big><a class="headerlink" href="#pymatrixid.backend.id_srando" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset seed values to their original values.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idd_copycols">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idd_copycols</tt><big>(</big><em>A</em>, <em>k</em>, <em>idx</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idd_copycols" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct skeleton matrix from real ID.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Original matrix.</li>
+<li><strong>k</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Rank of ID.</li>
+<li><strong>idx</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Column index array.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Skeleton matrix.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idd_diffsnorm">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idd_diffsnorm</tt><big>(</big><em>m</em>, <em>n</em>, <em>matvect</em>, <em>matvect2</em>, <em>matvec</em>, <em>matvec2</em>, <em>its=20</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idd_diffsnorm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimate spectral norm of the difference of two real matrices by the
+randomized power method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>m</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix row dimension.</li>
+<li><strong>n</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix column dimension.</li>
+<li><strong>matvect</strong> (<em>function</em>) &#8211; Function to apply the transpose of the first matrix to a vector, with call
+signature <cite>y = matvect(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output
+vectors, respectively.</li>
+<li><strong>matvect2</strong> (<em>function</em>) &#8211; Function to apply the transpose of the second matrix to a vector, with call
+signature <cite>y = matvect2(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output
+vectors, respectively.</li>
+<li><strong>matvec</strong> (<em>function</em>) &#8211; Function to apply the first matrix to a vector, with call signature
+<cite>y = matvec(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output vectors,
+respectively.</li>
+<li><strong>matvec2</strong> (<em>function</em>) &#8211; Function to apply the second matrix to a vector, with call signature
+<cite>y = matvec2(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output vectors,
+respectively.</li>
+<li><strong>its</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Number of power method iterations.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Spectral norm estimate of matrix difference.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idd_estrank">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idd_estrank</tt><big>(</big><em>eps</em>, <em>A</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idd_estrank" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimate rank of a real matrix to a specified relative precision using random
+sampling.</p>
+<p>The output rank is typically about 8 higher than the actual rank.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>eps</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Relative precision.</li>
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Matrix.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Rank estimate.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idd_findrank">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idd_findrank</tt><big>(</big><em>eps</em>, <em>m</em>, <em>n</em>, <em>matvect</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idd_findrank" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimate rank of a real matrix to a specified relative precision using random
+matrix-vector multiplication.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>eps</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Relative precision.</li>
+<li><strong>m</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix row dimension.</li>
+<li><strong>n</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix column dimension.</li>
+<li><strong>matvect</strong> (<em>function</em>) &#8211; Function to apply the matrix transpose to a vector, with call signature
+<cite>y = matvect(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output vectors,
+respectively.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Rank estimate.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idd_frm">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idd_frm</tt><big>(</big><em>n</em>, <em>w</em>, <em>x</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idd_frm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform real vector via a composition of Rokhlin&#8217;s random transform, random
+subselection, and an FFT.</p>
+<p>In contrast to <a class="reference internal" href="#pymatrixid.backend.idd_sfrm" title="pymatrixid.backend.idd_sfrm"><tt class="xref py py-func docutils literal"><span class="pre">idd_sfrm()</span></tt></a>, this routine works best when the length of
+the transformed vector is the power-of-two integer output by <a class="reference internal" href="#pymatrixid.backend.idd_frmi" title="pymatrixid.backend.idd_frmi"><tt class="xref py py-func docutils literal"><span class="pre">idd_frmi()</span></tt></a>,
+or when the length is not specified but instead determined a posteriori from
+the output. The returned transformed vector is randomly permuted.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>n</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Greatest power-of-two integer satisfying <cite>n &lt;= x.size</cite> as obtained from
+<a class="reference internal" href="#pymatrixid.backend.idd_frmi" title="pymatrixid.backend.idd_frmi"><tt class="xref py py-func docutils literal"><span class="pre">idd_frmi()</span></tt></a>; <cite>n</cite> is also the length of the output vector.</li>
+<li><strong>w</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Initialization array constructed by <a class="reference internal" href="#pymatrixid.backend.idd_frmi" title="pymatrixid.backend.idd_frmi"><tt class="xref py py-func docutils literal"><span class="pre">idd_frmi()</span></tt></a>.</li>
+<li><strong>x</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Vector to be transformed.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Transformed vector.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idd_frmi">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idd_frmi</tt><big>(</big><em>m</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idd_frmi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize data for <a class="reference internal" href="#pymatrixid.backend.idd_frm" title="pymatrixid.backend.idd_frm"><tt class="xref py py-func docutils literal"><span class="pre">idd_frm()</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>m</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Length of vector to be transformed.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Greatest power-of-two integer <cite>n</cite> satisfying <cite>n &lt;= m</cite>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Initialization array to be used by <a class="reference internal" href="#pymatrixid.backend.idd_frm" title="pymatrixid.backend.idd_frm"><tt class="xref py py-func docutils literal"><span class="pre">idd_frm()</span></tt></a>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idd_id2svd">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idd_id2svd</tt><big>(</big><em>B</em>, <em>idx</em>, <em>proj</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idd_id2svd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert real ID to SVD.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>B</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Skeleton matrix.</li>
+<li><strong>idx</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Column index array.</li>
+<li><strong>proj</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Interpolation coefficients.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Left singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Right singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Singular values.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idd_reconid">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idd_reconid</tt><big>(</big><em>B</em>, <em>idx</em>, <em>proj</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idd_reconid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct matrix from real ID.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>B</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Skeleton matrix.</li>
+<li><strong>idx</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Column index array.</li>
+<li><strong>proj</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Interpolation coefficients.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Reconstructed matrix.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idd_reconint">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idd_reconint</tt><big>(</big><em>idx</em>, <em>proj</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idd_reconint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct interpolation matrix from real ID.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>idx</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Column index array.</li>
+<li><strong>proj</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Interpolation coefficients.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Interpolation matrix.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idd_sfrm">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idd_sfrm</tt><big>(</big><em>l</em>, <em>n</em>, <em>w</em>, <em>x</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idd_sfrm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform real vector via a composition of Rokhlin&#8217;s random transform, random subselection, and an FFT.</p>
+<p>In contrast to <a class="reference internal" href="#pymatrixid.backend.idd_frm" title="pymatrixid.backend.idd_frm"><tt class="xref py py-func docutils literal"><span class="pre">idd_frm()</span></tt></a>, this routine works best when the length of the
+transformed vector is known a priori.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>l</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Length of transformed vector, satisfying <cite>l &lt;= n</cite>.</li>
+<li><strong>n</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Greatest power-of-two integer satisfying <cite>n &lt;= x.size</cite> as obtained from
+<a class="reference internal" href="#pymatrixid.backend.idd_sfrmi" title="pymatrixid.backend.idd_sfrmi"><tt class="xref py py-func docutils literal"><span class="pre">idd_sfrmi()</span></tt></a>.</li>
+<li><strong>w</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Initialization array constructed by <a class="reference internal" href="#pymatrixid.backend.idd_sfrmi" title="pymatrixid.backend.idd_sfrmi"><tt class="xref py py-func docutils literal"><span class="pre">idd_sfrmi()</span></tt></a>.</li>
+<li><strong>x</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Vector to be transformed.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Transformed vector.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idd_sfrmi">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idd_sfrmi</tt><big>(</big><em>l</em>, <em>m</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idd_sfrmi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize data for <a class="reference internal" href="#pymatrixid.backend.idd_sfrm" title="pymatrixid.backend.idd_sfrm"><tt class="xref py py-func docutils literal"><span class="pre">idd_sfrm()</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>l</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Length of output transformed vector.</li>
+<li><strong>m</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Length of the vector to be transformed.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Greatest power-of-two integer <cite>n</cite> satisfying <cite>n &lt;= m</cite>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Initialization array to be used by <a class="reference internal" href="#pymatrixid.backend.idd_sfrm" title="pymatrixid.backend.idd_sfrm"><tt class="xref py py-func docutils literal"><span class="pre">idd_sfrm()</span></tt></a>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idd_snorm">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idd_snorm</tt><big>(</big><em>m</em>, <em>n</em>, <em>matvect</em>, <em>matvec</em>, <em>its=20</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idd_snorm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimate spectral norm of a real matrix by the randomized power method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>m</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix row dimension.</li>
+<li><strong>n</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix column dimension.</li>
+<li><strong>matvect</strong> (<em>function</em>) &#8211; Function to apply the matrix transpose to a vector, with call signature
+<cite>y = matvect(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output vectors,
+respectively.</li>
+<li><strong>matvec</strong> (<em>function</em>) &#8211; Function to apply the matrix to a vector, with call signature
+<cite>y = matvec(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output vectors,
+respectively.</li>
+<li><strong>its</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Number of power method iterations.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Spectral norm estimate.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.iddp_aid">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">iddp_aid</tt><big>(</big><em>eps</em>, <em>A</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.iddp_aid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute ID of a real matrix to a specified relative precision using random
+sampling.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>eps</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Relative precision.</li>
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Matrix.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Rank of ID.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Column index array.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Interpolation coefficients.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.iddp_asvd">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">iddp_asvd</tt><big>(</big><em>eps</em>, <em>A</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.iddp_asvd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute SVD of a real matrix to a specified relative precision using random
+sampling.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>eps</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Relative precision.</li>
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Matrix.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Left singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Right singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Singular values.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.iddp_id">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">iddp_id</tt><big>(</big><em>eps</em>, <em>A</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.iddp_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute ID of a real matrix to a specified relative precision.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>eps</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Relative precision.</li>
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Matrix.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Rank of ID.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Column index array.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Interpolation coefficients.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.iddp_rid">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">iddp_rid</tt><big>(</big><em>eps</em>, <em>m</em>, <em>n</em>, <em>matvect</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.iddp_rid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute ID of a real matrix to a specified relative precision using random
+matrix-vector multiplication.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>eps</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Relative precision.</li>
+<li><strong>m</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix row dimension.</li>
+<li><strong>n</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix column dimension.</li>
+<li><strong>matvect</strong> (<em>function</em>) &#8211; Function to apply the matrix transpose to a vector, with call signature
+<cite>y = matvect(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output vectors,
+respectively.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Rank of ID.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Column index array.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Interpolation coefficients.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.iddp_rsvd">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">iddp_rsvd</tt><big>(</big><em>eps</em>, <em>m</em>, <em>n</em>, <em>matvect</em>, <em>matvec</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.iddp_rsvd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute SVD of a real matrix to a specified relative precision using random
+matrix-vector multiplication.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>eps</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Relative precision.</li>
+<li><strong>m</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix row dimension.</li>
+<li><strong>n</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix column dimension.</li>
+<li><strong>matvect</strong> (<em>function</em>) &#8211; Function to apply the matrix transpose to a vector, with call signature
+<cite>y = matvect(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output vectors,
+respectively.</li>
+<li><strong>matvec</strong> (<em>function</em>) &#8211; Function to apply the matrix to a vector, with call signature
+<cite>y = matvec(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output vectors,
+respectively.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Left singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Right singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Singular values.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.iddp_svd">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">iddp_svd</tt><big>(</big><em>eps</em>, <em>A</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.iddp_svd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute SVD of a real matrix to a specified relative precision.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>eps</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Relative precision.</li>
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Matrix.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Left singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Right singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Singular values.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.iddr_aid">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">iddr_aid</tt><big>(</big><em>A</em>, <em>k</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.iddr_aid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute ID of a real matrix to a specified rank using random sampling.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Matrix.</li>
+<li><strong>k</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Rank of ID.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Column index array.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Interpolation coefficients.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.iddr_aidi">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">iddr_aidi</tt><big>(</big><em>m</em>, <em>n</em>, <em>k</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.iddr_aidi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize array for <a class="reference internal" href="#pymatrixid.backend.iddr_aid" title="pymatrixid.backend.iddr_aid"><tt class="xref py py-func docutils literal"><span class="pre">iddr_aid()</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>m</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix row dimension.</li>
+<li><strong>n</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix column dimension.</li>
+<li><strong>k</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Rank of ID.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Initialization array to be used by <a class="reference internal" href="#pymatrixid.backend.iddr_aid" title="pymatrixid.backend.iddr_aid"><tt class="xref py py-func docutils literal"><span class="pre">iddr_aid()</span></tt></a>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.iddr_asvd">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">iddr_asvd</tt><big>(</big><em>A</em>, <em>k</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.iddr_asvd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute SVD of a real matrix to a specified rank using random sampling.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Matrix.</li>
+<li><strong>k</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Rank of SVD.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Left singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Right singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Singular values.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.iddr_id">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">iddr_id</tt><big>(</big><em>A</em>, <em>k</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.iddr_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute ID of a real matrix to a specified rank.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Matrix.</li>
+<li><strong>k</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Rank of ID.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Column index array.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Interpolation coefficients.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.iddr_rid">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">iddr_rid</tt><big>(</big><em>m</em>, <em>n</em>, <em>matvect</em>, <em>k</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.iddr_rid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute ID of a real matrix to a specified rank using random matrix-vector
+multiplication.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>m</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix row dimension.</li>
+<li><strong>n</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix column dimension.</li>
+<li><strong>matvect</strong> (<em>function</em>) &#8211; Function to apply the matrix transpose to a vector, with call signature
+<cite>y = matvect(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output vectors,
+respectively.</li>
+<li><strong>k</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Rank of ID.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Column index array.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Interpolation coefficients.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.iddr_rsvd">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">iddr_rsvd</tt><big>(</big><em>m</em>, <em>n</em>, <em>matvect</em>, <em>matvec</em>, <em>k</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.iddr_rsvd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute SVD of a real matrix to a specified rank using random matrix-vector
+multiplication.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>m</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix row dimension.</li>
+<li><strong>n</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix column dimension.</li>
+<li><strong>matvect</strong> (<em>function</em>) &#8211; Function to apply the matrix transpose to a vector, with call signature
+<cite>y = matvect(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output vectors,
+respectively.</li>
+<li><strong>matvec</strong> (<em>function</em>) &#8211; Function to apply the matrix to a vector, with call signature
+<cite>y = matvec(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output vectors,
+respectively.</li>
+<li><strong>k</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Rank of SVD.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Left singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Right singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Singular values.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.iddr_svd">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">iddr_svd</tt><big>(</big><em>A</em>, <em>k</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.iddr_svd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute SVD of a real matrix to a specified rank.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Matrix.</li>
+<li><strong>k</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Rank of SVD.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Left singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Right singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Singular values.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idz_copycols">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idz_copycols</tt><big>(</big><em>A</em>, <em>k</em>, <em>idx</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idz_copycols" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct skeleton matrix from complex ID.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Original matrix.</li>
+<li><strong>k</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Rank of ID.</li>
+<li><strong>idx</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Column index array.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Skeleton matrix.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idz_diffsnorm">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idz_diffsnorm</tt><big>(</big><em>m</em>, <em>n</em>, <em>matveca</em>, <em>matveca2</em>, <em>matvec</em>, <em>matvec2</em>, <em>its=20</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idz_diffsnorm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimate spectral norm of the difference of two complex matrices by the
+randomized power method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>m</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix row dimension.</li>
+<li><strong>n</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix column dimension.</li>
+<li><strong>matveca</strong> (<em>function</em>) &#8211; Function to apply the adjoint of the first matrix to a vector, with call
+signature <cite>y = matveca(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output
+vectors, respectively.</li>
+<li><strong>matveca2</strong> (<em>function</em>) &#8211; Function to apply the adjoint of the second matrix to a vector, with call
+signature <cite>y = matveca2(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output
+vectors, respectively.</li>
+<li><strong>matvec</strong> (<em>function</em>) &#8211; Function to apply the first matrix to a vector, with call signature
+<cite>y = matvec(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output vectors,
+respectively.</li>
+<li><strong>matvec2</strong> (<em>function</em>) &#8211; Function to apply the second matrix to a vector, with call signature
+<cite>y = matvec2(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output vectors,
+respectively.</li>
+<li><strong>its</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Number of power method iterations.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Spectral norm estimate of matrix difference.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idz_estrank">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idz_estrank</tt><big>(</big><em>eps</em>, <em>A</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idz_estrank" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimate rank of a complex matrix to a specified relative precision using
+random sampling.</p>
+<p>The output rank is typically about 8 higher than the actual rank.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>eps</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Relative precision.</li>
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Matrix.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Rank estimate.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idz_findrank">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idz_findrank</tt><big>(</big><em>eps</em>, <em>m</em>, <em>n</em>, <em>matveca</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idz_findrank" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimate rank of a complex matrix to a specified relative precision using
+random matrix-vector multiplication.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>eps</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Relative precision.</li>
+<li><strong>m</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix row dimension.</li>
+<li><strong>n</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix column dimension.</li>
+<li><strong>matveca</strong> (<em>function</em>) &#8211; Function to apply the matrix adjoint to a vector, with call signature
+<cite>y = matveca(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output vectors,
+respectively.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Rank estimate.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idz_frm">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idz_frm</tt><big>(</big><em>n</em>, <em>w</em>, <em>x</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idz_frm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform complex vector via a composition of Rokhlin&#8217;s random transform,
+random subselection, and an FFT.</p>
+<p>In contrast to <a class="reference internal" href="#pymatrixid.backend.idz_sfrm" title="pymatrixid.backend.idz_sfrm"><tt class="xref py py-func docutils literal"><span class="pre">idz_sfrm()</span></tt></a>, this routine works best when the length of
+the transformed vector is the power-of-two integer output by <a class="reference internal" href="#pymatrixid.backend.idz_frmi" title="pymatrixid.backend.idz_frmi"><tt class="xref py py-func docutils literal"><span class="pre">idz_frmi()</span></tt></a>,
+or when the length is not specified but instead determined a posteriori from
+the output. The returned transformed vector is randomly permuted.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>n</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Greatest power-of-two integer satisfying <cite>n &lt;= x.size</cite> as obtained from
+<a class="reference internal" href="#pymatrixid.backend.idz_frmi" title="pymatrixid.backend.idz_frmi"><tt class="xref py py-func docutils literal"><span class="pre">idz_frmi()</span></tt></a>; <cite>n</cite> is also the length of the output vector.</li>
+<li><strong>w</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Initialization array constructed by <a class="reference internal" href="#pymatrixid.backend.idz_frmi" title="pymatrixid.backend.idz_frmi"><tt class="xref py py-func docutils literal"><span class="pre">idz_frmi()</span></tt></a>.</li>
+<li><strong>x</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Vector to be transformed.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Transformed vector.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idz_frmi">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idz_frmi</tt><big>(</big><em>m</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idz_frmi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize data for <a class="reference internal" href="#pymatrixid.backend.idz_frm" title="pymatrixid.backend.idz_frm"><tt class="xref py py-func docutils literal"><span class="pre">idz_frm()</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>m</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Length of vector to be transformed.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Greatest power-of-two integer <cite>n</cite> satisfying <cite>n &lt;= m</cite>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Initialization array to be used by <a class="reference internal" href="#pymatrixid.backend.idz_frm" title="pymatrixid.backend.idz_frm"><tt class="xref py py-func docutils literal"><span class="pre">idz_frm()</span></tt></a>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idz_id2svd">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idz_id2svd</tt><big>(</big><em>B</em>, <em>idx</em>, <em>proj</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idz_id2svd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert complex ID to SVD.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>B</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Skeleton matrix.</li>
+<li><strong>idx</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Column index array.</li>
+<li><strong>proj</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Interpolation coefficients.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Left singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Right singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Singular values.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idz_reconid">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idz_reconid</tt><big>(</big><em>B</em>, <em>idx</em>, <em>proj</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idz_reconid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct matrix from complex ID.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>B</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Skeleton matrix.</li>
+<li><strong>idx</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Column index array.</li>
+<li><strong>proj</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Interpolation coefficients.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Reconstructed matrix.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idz_reconint">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idz_reconint</tt><big>(</big><em>idx</em>, <em>proj</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idz_reconint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct interpolation matrix from complex ID.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>idx</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Column index array.</li>
+<li><strong>proj</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Interpolation coefficients.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Interpolation matrix.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idz_sfrm">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idz_sfrm</tt><big>(</big><em>l</em>, <em>n</em>, <em>w</em>, <em>x</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idz_sfrm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform complex vector via a composition of Rokhlin&#8217;s random transform,
+random subselection, and an FFT.</p>
+<p>In contrast to <a class="reference internal" href="#pymatrixid.backend.idz_frm" title="pymatrixid.backend.idz_frm"><tt class="xref py py-func docutils literal"><span class="pre">idz_frm()</span></tt></a>, this routine works best when the length of the
+transformed vector is known a priori.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>l</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Length of transformed vector, satisfying <cite>l &lt;= n</cite>.</li>
+<li><strong>n</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Greatest power-of-two integer satisfying <cite>n &lt;= x.size</cite> as obtained from
+<a class="reference internal" href="#pymatrixid.backend.idz_sfrmi" title="pymatrixid.backend.idz_sfrmi"><tt class="xref py py-func docutils literal"><span class="pre">idz_sfrmi()</span></tt></a>.</li>
+<li><strong>w</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Initialization array constructed by <a class="reference internal" href="#pymatrixid.backend.idd_sfrmi" title="pymatrixid.backend.idd_sfrmi"><tt class="xref py py-func docutils literal"><span class="pre">idd_sfrmi()</span></tt></a>.</li>
+<li><strong>x</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Vector to be transformed.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Transformed vector.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idz_sfrmi">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idz_sfrmi</tt><big>(</big><em>l</em>, <em>m</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idz_sfrmi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize data for <a class="reference internal" href="#pymatrixid.backend.idz_sfrm" title="pymatrixid.backend.idz_sfrm"><tt class="xref py py-func docutils literal"><span class="pre">idz_sfrm()</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>l</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Length of output transformed vector.</li>
+<li><strong>m</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Length of the vector to be transformed.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Greatest power-of-two integer <cite>n</cite> satisfying <cite>n &lt;= m</cite>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Initialization array to be used by <a class="reference internal" href="#pymatrixid.backend.idz_sfrm" title="pymatrixid.backend.idz_sfrm"><tt class="xref py py-func docutils literal"><span class="pre">idz_sfrm()</span></tt></a>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idz_snorm">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idz_snorm</tt><big>(</big><em>m</em>, <em>n</em>, <em>matveca</em>, <em>matvec</em>, <em>its=20</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idz_snorm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimate spectral norm of a complex matrix by the randomized power method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>m</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix row dimension.</li>
+<li><strong>n</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix column dimension.</li>
+<li><strong>matveca</strong> (<em>function</em>) &#8211; Function to apply the matrix adjoint to a vector, with call signature
+<cite>y = matveca(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output vectors,
+respectively.</li>
+<li><strong>matvec</strong> (<em>function</em>) &#8211; Function to apply the matrix to a vector, with call signature
+<cite>y = matvec(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output vectors,
+respectively.</li>
+<li><strong>its</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Number of power method iterations.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Spectral norm estimate.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idzp_aid">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idzp_aid</tt><big>(</big><em>eps</em>, <em>A</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idzp_aid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute ID of a complex matrix to a specified relative precision using random
+sampling.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>eps</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Relative precision.</li>
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Matrix.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Rank of ID.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Column index array.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Interpolation coefficients.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idzp_asvd">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idzp_asvd</tt><big>(</big><em>eps</em>, <em>A</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idzp_asvd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute SVD of a complex matrix to a specified relative precision using random
+sampling.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>eps</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Relative precision.</li>
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Matrix.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Left singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Right singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Singular values.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idzp_id">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idzp_id</tt><big>(</big><em>eps</em>, <em>A</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idzp_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute ID of a complex matrix to a specified relative precision.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>eps</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Relative precision.</li>
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Matrix.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Rank of ID.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Column index array.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Interpolation coefficients.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idzp_rid">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idzp_rid</tt><big>(</big><em>eps</em>, <em>m</em>, <em>n</em>, <em>matveca</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idzp_rid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute ID of a complex matrix to a specified relative precision using random
+matrix-vector multiplication.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>eps</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Relative precision.</li>
+<li><strong>m</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix row dimension.</li>
+<li><strong>n</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix column dimension.</li>
+<li><strong>matveca</strong> (<em>function</em>) &#8211; Function to apply the matrix adjoint to a vector, with call signature
+<cite>y = matveca(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output vectors,
+respectively.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Rank of ID.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Column index array.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Interpolation coefficients.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idzp_rsvd">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idzp_rsvd</tt><big>(</big><em>eps</em>, <em>m</em>, <em>n</em>, <em>matveca</em>, <em>matvec</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idzp_rsvd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute SVD of a complex matrix to a specified relative precision using random
+matrix-vector multiplication.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>eps</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Relative precision.</li>
+<li><strong>m</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix row dimension.</li>
+<li><strong>n</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix column dimension.</li>
+<li><strong>matveca</strong> (<em>function</em>) &#8211; Function to apply the matrix adjoint to a vector, with call signature
+<cite>y = matveca(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output vectors,
+respectively.</li>
+<li><strong>matvec</strong> (<em>function</em>) &#8211; Function to apply the matrix to a vector, with call signature
+<cite>y = matvec(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output vectors,
+respectively.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Left singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Right singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Singular values.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idzp_svd">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idzp_svd</tt><big>(</big><em>eps</em>, <em>A</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idzp_svd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute SVD of a complex matrix to a specified relative precision.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>eps</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Relative precision.</li>
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Matrix.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Left singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Right singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Singular values.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idzr_aid">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idzr_aid</tt><big>(</big><em>A</em>, <em>k</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idzr_aid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute ID of a complex matrix to a specified rank using random sampling.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Matrix.</li>
+<li><strong>k</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Rank of ID.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Column index array.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Interpolation coefficients.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idzr_aidi">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idzr_aidi</tt><big>(</big><em>m</em>, <em>n</em>, <em>k</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idzr_aidi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize array for <a class="reference internal" href="#pymatrixid.backend.idzr_aid" title="pymatrixid.backend.idzr_aid"><tt class="xref py py-func docutils literal"><span class="pre">idzr_aid()</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>m</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix row dimension.</li>
+<li><strong>n</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix column dimension.</li>
+<li><strong>k</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Rank of ID.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Initialization array to be used by <a class="reference internal" href="#pymatrixid.backend.idzr_aid" title="pymatrixid.backend.idzr_aid"><tt class="xref py py-func docutils literal"><span class="pre">idzr_aid()</span></tt></a>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idzr_asvd">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idzr_asvd</tt><big>(</big><em>A</em>, <em>k</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idzr_asvd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute SVD of a complex matrix to a specified rank using random sampling.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Matrix.</li>
+<li><strong>k</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Rank of SVD.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Left singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Right singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Singular values.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idzr_id">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idzr_id</tt><big>(</big><em>A</em>, <em>k</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idzr_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute ID of a complex matrix to a specified rank.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Matrix.</li>
+<li><strong>k</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Rank of ID.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Column index array.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Interpolation coefficients.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idzr_rid">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idzr_rid</tt><big>(</big><em>m</em>, <em>n</em>, <em>matveca</em>, <em>k</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idzr_rid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute ID of a complex matrix to a specified rank using random matrix-vector
+multiplication.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>m</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix row dimension.</li>
+<li><strong>n</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix column dimension.</li>
+<li><strong>matveca</strong> (<em>function</em>) &#8211; Function to apply the matrix adjoint to a vector, with call signature
+<cite>y = matveca(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output vectors,
+respectively.</li>
+<li><strong>k</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Rank of ID.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Column index array.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Interpolation coefficients.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idzr_rsvd">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idzr_rsvd</tt><big>(</big><em>m</em>, <em>n</em>, <em>matveca</em>, <em>matvec</em>, <em>k</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idzr_rsvd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute SVD of a complex matrix to a specified rank using random matrix-vector
+multiplication.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>m</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix row dimension.</li>
+<li><strong>n</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Matrix column dimension.</li>
+<li><strong>matveca</strong> (<em>function</em>) &#8211; Function to apply the matrix adjoint to a vector, with call signature
+<cite>y = matveca(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output vectors,
+respectively.</li>
+<li><strong>matvec</strong> (<em>function</em>) &#8211; Function to apply the matrix to a vector, with call signature
+<cite>y = matvec(x)</cite>, where <cite>x</cite> and <cite>y</cite> are the input and output vectors,
+respectively.</li>
+<li><strong>k</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Rank of SVD.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Left singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Right singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Singular values.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymatrixid.backend.idzr_svd">
+<tt class="descclassname">pymatrixid.backend.</tt><tt class="descname">idzr_svd</tt><big>(</big><em>A</em>, <em>k</em><big>)</big><a class="headerlink" href="#pymatrixid.backend.idzr_svd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute SVD of a complex matrix to a specified rank.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>A</strong> (<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>) &#8211; Matrix.</li>
+<li><strong>k</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Rank of SVD.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Left singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Right singular vectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Singular values.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Python API</a><ul>
+<li><a class="reference internal" href="#module-pymatrixid">pymatrixid</a></li>
+<li><a class="reference internal" href="#module-pymatrixid.backend">pymatrixid.backend</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial.html"
+                        title="previous chapter">Tutorial</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/api.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             >previous</a> |</li>
+        <li><a href="index.html">PyMatrixID 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013-2014, Kenneth L. Ho.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,338 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tutorial &mdash; PyMatrixID 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="PyMatrixID 0.1 documentation" href="index.html" />
+    <link rel="next" title="Python API" href="api.html" />
+    <link rel="prev" title="Installing" href="install.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="Python API"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Installing"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PyMatrixID 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="tutorial">
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
+<p>We now present a tutorial on using PyMatrixID. From here on, we will therefore assume that PyMatrixID has been properly installed; if this is not the case, please go back to <a class="reference internal" href="install.html"><em>Installing</em></a>.</p>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The Python interface is located in the directory <tt class="docutils literal"><span class="pre">python</span></tt>, which contains the directory <tt class="docutils literal"><span class="pre">pymatrixid</span></tt>, organizing the main Python package, and <tt class="docutils literal"><span class="pre">id_dist.so</span></tt>, the F2PY-ed Fortran library. The file <tt class="docutils literal"><span class="pre">id_dist.so</span></tt> contains all wrapped routines and is imported by <a class="reference internal" href="api.html#module-pymatrixid.backend" title="pymatrixid.backend"><tt class="xref py py-mod docutils literal"><span class="pre">pymatrixid.backend</span></tt></a>, which in turn is imported by <a class="reference internal" href="api.html#module-pymatrixid" title="pymatrixid"><tt class="xref py py-mod docutils literal"><span class="pre">pymatrixid</span></tt></a> to create a more convenient interface around it. For details on the Python modules, please see the <a class="reference internal" href="api.html"><em>Python API</em></a>.</p>
+<p>We will now step through the process of using PyMatrixID, following the driver program as a guide.</p>
+</div>
+<div class="section" id="initializing">
+<h2>Initializing<a class="headerlink" href="#initializing" title="Permalink to this headline">¶</a></h2>
+<p>The first step is to import <a class="reference internal" href="api.html#module-pymatrixid" title="pymatrixid"><tt class="xref py py-mod docutils literal"><span class="pre">pymatrixid</span></tt></a> by issuing the command:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pymatrixid</span>
+</pre></div>
+</div>
+<p>at the Python prompt. This should work if you are in the <tt class="docutils literal"><span class="pre">python</span></tt> directory; otherwise, you may have to first type something like:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">pymatrixid</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>in order to tell Python where to look.</p>
+<p>Now let&#8217;s build a matrix. For this, we consider a Hilbert matrix, which is well known to have low rank:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">hilbert</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">hilbert</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can also do this explicitly via:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s">&#39;F&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note the use of the flag <tt class="docutils literal"><span class="pre">order='F'</span></tt> in <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.empty.html#numpy.empty" title="(in NumPy v1.8)"><tt class="xref py py-func docutils literal"><span class="pre">numpy.empty()</span></tt></a>. This instantiates the matrix in Fortran-contiguous order and is important for avoiding data copying when passing to the backend.</p>
+<p>We then define multiplication routines for the matrix by regarding it as a <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v0.13.0)"><tt class="xref py py-class docutils literal"><span class="pre">scipy.sparse.linalg.LinearOperator</span></tt></a>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">aslinearoperator</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">L</span> <span class="o">=</span> <span class="n">aslinearoperator</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This automatically sets up methods describing the action of the matrix and its adjoint on a vector.</p>
+</div>
+<div class="section" id="computing-an-id">
+<h2>Computing an ID<a class="headerlink" href="#computing-an-id" title="Permalink to this headline">¶</a></h2>
+<p>We have several choices of algorithm to compute an ID. These fall largely according to two dichotomies:</p>
+<ol class="arabic simple">
+<li>how the matrix is represented, i.e., via its entries or via its action on a vector; and</li>
+<li>whether to approximate it to a fixed relative precision or to a fixed rank.</li>
+</ol>
+<p>We step through each choice in turn below.</p>
+<p>In all cases, the ID is represented by three parameters:</p>
+<ol class="arabic simple">
+<li>a rank <tt class="docutils literal"><span class="pre">k</span></tt>;</li>
+<li>an index array <tt class="docutils literal"><span class="pre">idx</span></tt>; and</li>
+<li>interpolation coefficients <tt class="docutils literal"><span class="pre">proj</span></tt>.</li>
+</ol>
+<p>The ID is specified by the relation <tt class="docutils literal"><span class="pre">np.dot(A[:,idx[:k]],</span> <span class="pre">proj)</span> <span class="pre">=</span> <span class="pre">A[:,idx[k:]]</span></tt>.</p>
+<div class="section" id="from-matrix-entries">
+<h3>From matrix entries<a class="headerlink" href="#from-matrix-entries" title="Permalink to this headline">¶</a></h3>
+<p>We first consider a matrix given in terms of its entries.</p>
+<p>To compute an ID to a fixed precision, type:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">proj</span> <span class="o">=</span> <span class="n">pymatrixid</span><span class="o">.</span><span class="n">interp_decomp</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">eps</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <tt class="docutils literal"><span class="pre">eps</span> <span class="pre">&lt;</span> <span class="pre">1</span></tt> is the desired precision.</p>
+<p>To compute an ID to a fixed rank, use:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="p">,</span> <span class="n">proj</span> <span class="o">=</span> <span class="n">pymatrixid</span><span class="o">.</span><span class="n">interp_decomp</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <tt class="docutils literal"><span class="pre">k</span> <span class="pre">&gt;=</span> <span class="pre">1</span></tt> is the desired rank.</p>
+<p>Both algorithms use random sampling and are usually faster than the corresponding older, deterministic algorithms, which can be accessed via the commands:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">proj</span> <span class="o">=</span> <span class="n">pymatrixid</span><span class="o">.</span><span class="n">interp_decomp</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">eps</span><span class="p">,</span> <span class="n">rand</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="p">,</span> <span class="n">proj</span> <span class="o">=</span> <span class="n">pymatrixid</span><span class="o">.</span><span class="n">interp_decomp</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">rand</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>respectively.</p>
+</div>
+<div class="section" id="from-matrix-action">
+<h3>From matrix action<a class="headerlink" href="#from-matrix-action" title="Permalink to this headline">¶</a></h3>
+<p>Now consider a matrix given in terms of its action on a vector as a <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v0.13.0)"><tt class="xref py py-class docutils literal"><span class="pre">scipy.sparse.linalg.LinearOperator</span></tt></a>.</p>
+<p>To compute an ID to a fixed precision, type:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">proj</span> <span class="o">=</span> <span class="n">pymatrixid</span><span class="o">.</span><span class="n">interp_decomp</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">eps</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To compute an ID to a fixed rank, use:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="p">,</span> <span class="n">proj</span> <span class="o">=</span> <span class="n">pymatrixid</span><span class="o">.</span><span class="n">interp_decomp</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>These algorithms are randomized.</p>
+</div>
+</div>
+<div class="section" id="reconstructing-an-id">
+<h2>Reconstructing an ID<a class="headerlink" href="#reconstructing-an-id" title="Permalink to this headline">¶</a></h2>
+<p>The ID routines above do not output the skeleton and interpolation matrices explicitly but instead return the relevant information in a more compact (and sometimes more useful) form. To build these matrices, write:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">pymatrixid</span><span class="o">.</span><span class="n">reconstruct_skel_matrix</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>for the skeleton matrix and:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">P</span> <span class="o">=</span> <span class="n">pymatrixid</span><span class="o">.</span><span class="n">reconstruct_interp_matrix</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">proj</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>for the interpolation matrix. The ID approximation can then be computed as:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This can also be constructed using:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">pymatrixid</span><span class="o">.</span><span class="n">reconstruct_matrix_from_id</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">proj</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>without having to first compute <tt class="docutils literal"><span class="pre">P</span></tt>.</p>
+<p>Alternatively, this can be done explicitly as well using:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="p">[:,</span><span class="n">idx</span><span class="p">[:</span><span class="n">k</span><span class="p">]]</span>
+<span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">proj</span><span class="p">])[:,</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">idx</span><span class="p">)]</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="computing-an-svd">
+<h2>Computing an SVD<a class="headerlink" href="#computing-an-svd" title="Permalink to this headline">¶</a></h2>
+<p>An ID can be converted to an SVD via the command:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">U</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">pymatrixid</span><span class="o">.</span><span class="n">id_to_svd</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">proj</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The SVD approximation is then:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">S</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">V</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>The SVD can also be computed &#8220;fresh&#8221; by combining both the ID and conversion steps into one command. Following the various ID algorithms above, there are correspondingly various SVD algorithms that one can employ.</p>
+<div class="section" id="id1">
+<h3>From matrix entries<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>We consider first SVD algorithms for a matrix given in terms of its entries.</p>
+<p>To compute an SVD to a fixed precision, type:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">U</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">pymatrixid</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">eps</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To compute an SVD to a fixed rank, use:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">U</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">pymatrixid</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Both algorithms use random sampling; for the determinstic versions, issue the keyword <tt class="docutils literal"><span class="pre">rand=False</span></tt> as above.</p>
+</div>
+<div class="section" id="id2">
+<h3>From matrix action<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>Now consider a matrix given in terms of its action on a vector.</p>
+<p>To compute an SVD to a fixed precision, type:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">U</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">pymatrixid</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">eps</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To compute an SVD to a fixed rank, use:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">U</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">pymatrixid</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="utility-routines">
+<h2>Utility routines<a class="headerlink" href="#utility-routines" title="Permalink to this headline">¶</a></h2>
+<p>Several utility routines are also available.</p>
+<p>To estimate the spectral norm of a matrix, use:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">snorm</span> <span class="o">=</span> <span class="n">pymatrixid</span><span class="o">.</span><span class="n">estimate_spectral_norm</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This algorithm is based on the randomized power method and thus requires only matrix-vector products. The number of iterations to take can be set using the keyword <tt class="docutils literal"><span class="pre">its</span></tt> (default: <tt class="docutils literal"><span class="pre">its=20</span></tt>). The matrix is interpreted as a <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v0.13.0)"><tt class="xref py py-class docutils literal"><span class="pre">scipy.sparse.linalg.LinearOperator</span></tt></a>, but it is also valid to supply it as a <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.8)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a>, in which case it is trivially converted using <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.aslinearoperator.html#scipy.sparse.linalg.aslinearoperator" title="(in SciPy v0.13.0)"><tt class="xref py py-func docutils literal"><span class="pre">scipy.sparse.linalg.aslinearoperator()</span></tt></a>.</p>
+<p>The same algorithm can also estimate the spectral norm of the difference of two matrices <tt class="docutils literal"><span class="pre">A1</span></tt> and <tt class="docutils literal"><span class="pre">A2</span></tt> as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">diff</span> <span class="o">=</span> <span class="n">pymatrixid</span><span class="o">.</span><span class="n">estimate_spectral_norm_diff</span><span class="p">(</span><span class="n">A1</span><span class="p">,</span> <span class="n">A2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This is often useful for checking the accuracy of a matrix approximation.</p>
+<p>Some routines in <a class="reference internal" href="api.html#module-pymatrixid" title="pymatrixid"><tt class="xref py py-mod docutils literal"><span class="pre">pymatrixid</span></tt></a> require estimating the rank of a matrix as well. This can be done with either:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">pymatrixid</span><span class="o">.</span><span class="n">estimate_rank</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">eps</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">pymatrixid</span><span class="o">.</span><span class="n">estimate_rank</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">eps</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>depending on the representation. The parameter <tt class="docutils literal"><span class="pre">eps</span></tt> controls the definition of the numerical rank.</p>
+<p>Finally, the random number generation required for all randomized routines can be controlled via <a class="reference internal" href="api.html#pymatrixid.rand" title="pymatrixid.rand"><tt class="xref py py-func docutils literal"><span class="pre">pymatrixid.rand()</span></tt></a>. To reset the seed values to their original values, use:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">pymatrixid</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>To specify the seed values, use:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">pymatrixid</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <tt class="docutils literal"><span class="pre">s</span></tt> must be an array of 55 floats. To simply generate some random numbers, type:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">pymatrixid</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <tt class="docutils literal"><span class="pre">n</span></tt> is the number of random numbers to generate.</p>
+</div>
+<div class="section" id="remarks">
+<h2>Remarks<a class="headerlink" href="#remarks" title="Permalink to this headline">¶</a></h2>
+<p>The above functions all automatically detect the appropriate interface and work with both real and complex data types, passing input arguments to the proper backend routine.</p>
+<p>All backend functions can be accessed via the <a class="reference internal" href="api.html#module-pymatrixid.backend" title="pymatrixid.backend"><tt class="xref py py-mod docutils literal"><span class="pre">pymatrixid.backend</span></tt></a> module, which wraps the Fortran functions directly, perhaps with some minor simplification.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tutorial</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#initializing">Initializing</a></li>
+<li><a class="reference internal" href="#computing-an-id">Computing an ID</a><ul>
+<li><a class="reference internal" href="#from-matrix-entries">From matrix entries</a></li>
+<li><a class="reference internal" href="#from-matrix-action">From matrix action</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#reconstructing-an-id">Reconstructing an ID</a></li>
+<li><a class="reference internal" href="#computing-an-svd">Computing an SVD</a><ul>
+<li><a class="reference internal" href="#id1">From matrix entries</a></li>
+<li><a class="reference internal" href="#id2">From matrix action</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#utility-routines">Utility routines</a></li>
+<li><a class="reference internal" href="#remarks">Remarks</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="install.html"
+                        title="previous chapter">Installing</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="api.html"
+                        title="next chapter">Python API</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/tutorial.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="Python API"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Installing"
+             >previous</a> |</li>
+        <li><a href="index.html">PyMatrixID 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013-2014, Kenneth L. Ho.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

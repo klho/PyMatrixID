@@ -1,0 +1,193 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction &mdash; PyMatrixID 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="PyMatrixID 0.1 documentation" href="index.html" />
+    <link rel="next" title="Installing" href="install.html" />
+    <link rel="prev" title="Welcome to PyMatrixID’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Installing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to PyMatrixID’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PyMatrixID 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p>An interpolative decomposition (ID) of a matrix <span class="math">\(A \in \mathbb{C}^{m \times n}\)</span> of rank <span class="math">\(k \leq \min \{ m, n \}\)</span> is a factorization</p>
+<div class="math">
+\[\begin{split}A \Pi =
+\begin{bmatrix}
+ A \Pi_{1} &amp; A \Pi_{2}
+\end{bmatrix} =
+A \Pi_{1}
+\begin{bmatrix}
+ I &amp; T
+\end{bmatrix},\end{split}\]</div>
+<p>where <span class="math">\(\Pi = [\Pi_{1}, \Pi_{2}]\)</span> is a permutation matrix with <span class="math">\(\Pi_{1} \in \{ 0, 1 \}^{n \times k}\)</span>, i.e., <span class="math">\(A \Pi_{2} = A \Pi_{1} T\)</span>. This can equivalently be written as <span class="math">\(A = BP\)</span>, where <span class="math">\(B = A \Pi_{1}\)</span> and <span class="math">\(P = [I, T] \Pi^{\mathsf{T}}\)</span> are the <em>skeleton</em> and <em>interpolation matrices</em>, respectively.</p>
+<p>If <span class="math">\(A\)</span> does not have exact rank <span class="math">\(k\)</span>, then there exists an approximation in the form of an ID such that <span class="math">\(A = BP + E\)</span>, where <span class="math">\(\| E \| \sim \sigma_{k + 1}\)</span> is on the order of the <span class="math">\((k + 1)\)</span>-th largest singular value of <span class="math">\(A\)</span>. Note that <span class="math">\(\sigma_{k + 1}\)</span> is the best possible error for a rank-<span class="math">\(k\)</span> approximation and, in fact, is achieved by the singular value decomposition (SVD) <span class="math">\(A \approx U S V^{*}\)</span>, where <span class="math">\(U \in \mathbb{C}^{m \times k}\)</span> and <span class="math">\(V \in \mathbb{C}^{n \times k}\)</span> have orthonormal columns and <span class="math">\(S = \mathop{\mathrm{diag}} (\sigma_{i}) \in \mathbb{C}^{k \times k}\)</span> is diagonal with nonnegative entries. The principal advantages of using an ID over an SVD are that:</p>
+<ul class="simple">
+<li>it is cheaper to construct;</li>
+<li>it preserves the structure of <span class="math">\(A\)</span>; and</li>
+<li>it is more efficient to compute with in light of the identity submatrix of <span class="math">\(P\)</span>.</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">PyMatrixID has been merged into SciPy 0.13 (in a slightly modified form) as <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/linalg.interpolative.html#scipy.linalg.interpolative" title="(in SciPy v0.13.0)"><tt class="xref py py-mod docutils literal"><span class="pre">scipy.linalg.interpolative</span></tt></a> by Andreas Klöckner and Pauli Virtanen. It is highly recommended to henceforth use that package instead.</p>
+</div>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The ID software package <a class="footnote-reference" href="#id9" id="id1">[4]</a> by Martinsson, Rokhlin, Shkolnisky, and Tygert is a Fortran library to compute IDs using various algorithms, including the deterministic pivoted QR approach of <a class="footnote-reference" href="#id6" id="id2">[1]</a> and the more recent randomized methods described in <a class="footnote-reference" href="#id7" id="id3">[2]</a>, <a class="footnote-reference" href="#id8" id="id4">[3]</a>, and <a class="footnote-reference" href="#id10" id="id5">[5]</a>. PyMatrixID is a Python wrapper for this package that exposes its functionality in a more convenient manner. Note that PyMatrixID does not add any functionality beyond that of organizing a simpler and more consistent interface.</p>
+<p>We advise the user to consult also the documentation for the ID package, which is included in full as part of PyMatrixID.</p>
+</div>
+<div class="section" id="licensing-and-availability">
+<h2>Licensing and availability<a class="headerlink" href="#licensing-and-availability" title="Permalink to this headline">¶</a></h2>
+<p>PyMatrixID is freely available under the <a class="reference external" href="http://opensource.org/licenses/BSD-3-Clause">BSD license</a> and can be downloaded at <a class="reference external" href="https://github.com/klho/PyMatrixID">https://github.com/klho/PyMatrixID</a>. To request alternate licenses, please contact the author.</p>
+<p>PyMatrixID also distributes the ID software package, which is likewise released under the BSD license.</p>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<table class="docutils footnote" frame="void" id="id6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[1]</a></td><td>H. Cheng, Z. Gimbutas, P.G. Martinsson, V. Rokhlin. On the compression of low rank matrices. <cite>SIAM J. Sci. Comput.</cite> 26 (4): 1389&#8211;1404, 2005. <a class="reference external" href="http://dx.doi.org/10.1137/030602678">doi:10.1137/030602678</a>.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[2]</a></td><td>E. Liberty, F. Woolfe, P.G. Martinsson, V. Rokhlin, M. Tygert. Randomized algorithms for the low-rank approximation of matrices. <cite>Proc. Natl. Acad. Sci. U.S.A.</cite> 104 (51): 20167&#8211;20172, 2007. <a class="reference external" href="http://dx.doi.org/10.1073/pnas.0709640104">doi:10.1073/pnas.0709640104</a>.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[3]</a></td><td>P.G. Martinsson, V. Rokhlin, M. Tygert. A randomized algorithm for the decomposition of matrices. <cite>Appl. Comput. Harmon. Anal.</cite> 30 (1): 47&#8211;68,  2011. <a class="reference external" href="http://dx.doi.org/10.1016/j.acha.2010.02.003">doi:10.1016/j.acha.2010.02.003</a>.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[4]</a></td><td>P.G. Martinsson, V. Rokhlin, Y. Shkolnisky, M. Tygert. ID: a software package for low-rank approximation of matrices via interpolative decompositions, version 0.3. <a class="reference external" href="http://cims.nyu.edu/~tygert/id_doc.pdf">http://cims.nyu.edu/~tygert/id_doc.pdf</a>.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[5]</a></td><td>F. Woolfe, E. Liberty, V. Rokhlin, M. Tygert. A fast randomized algorithm for the approximation of matrices. <cite>Appl. Comput. Harmon. Anal.</cite> 25 (3): 335&#8211;366, 2008. <a class="reference external" href="http://dx.doi.org/10.1016/j.acha.2007.12.002">doi:10.1016/j.acha.2007.12.002</a>.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#licensing-and-availability">Licensing and availability</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to PyMatrixID&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="install.html"
+                        title="next chapter">Installing</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/intro.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Installing"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to PyMatrixID’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">PyMatrixID 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013-2014, Kenneth L. Ho.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
