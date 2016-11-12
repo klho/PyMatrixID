@@ -1,0 +1,4 @@
+*.a
+*.so
+*.pyc
+external/id_dist/bin
