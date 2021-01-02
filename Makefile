@@ -1,6 +1,6 @@
 LIB       = pymatrixid
 ID_LIB    = id_dist
-F2PY      = f2py
+F2PY      = f2py3
 F2PYFLAGS = --fcompiler=gnu95 --link-lapack_opt
 PYTHON    = python
 
@@ -12,6 +12,9 @@ EXAMPLES = examples
 ID_DIR   = external/$(ID_LIB)
 ID_SRC   = $(ID_DIR)/src
 
+F2PY_EXT = $(shell python3-config --extension-suffix)
+ID_PYSO  = $(ID_LIB)$(F2PY_EXT)
+
 vpath %.pyf $(SRC)
 vpath %.so  $(PYTHON)
 
@@ -19,12 +22,12 @@ vpath %.so  $(PYTHON)
 
 all: python
 
-$(ID_LIB).so: $(ID_LIB).pyf
+$(ID_PYSO): $(ID_LIB).pyf
 	$(F2PY) -c $< $(F2PYFLAGS) $(ID_SRC)/*.f
-	mv $(ID_LIB).so $(BIN)
-	cd $(PYTHON) ; ln -fs ../$(BIN)/$(ID_LIB).so
+	mv $(ID_PYSO) $(BIN)
+	cd $(PYTHON) ; ln -fs ../$(BIN)/$(ID_PYSO)
 
-python: $(ID_LIB).so
+python: $(ID_PYSO)
 
 id_dist:
 	cd $(ID_DIR) ; make
@@ -33,13 +36,13 @@ doc: python
 	cd $(DOC) ; make html ; make latexpdf
 
 driver: python
-	cd $(EXAMPLES) ; python driver.py
+	cd $(EXAMPLES) ; python3 driver.py
 
 clean: clean_python clean_id_dist clean_doc clean_driver
 
 clean_python:
-	cd $(BIN) ; rm -f $(ID_LIB).so
-	cd $(PYTHON) ; rm -f $(ID_LIB).so
+	cd $(BIN) ; rm -f $(ID_PYSO)
+	cd $(PYTHON) ; rm -f $(ID_PYSO)
 	cd $(PYTHON)/$(LIB) ; rm -f __init__.pyc backend.pyc
 
 clean_id_dist:

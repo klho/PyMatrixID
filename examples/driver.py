@@ -46,7 +46,6 @@ if __name__ == '__main__':
 
   # construct Hilbert matrix
   A = hilbert(n)
-  L = aslinearoperator(A)
 
   # find rank
   S = np.linalg.svd(A, compute_uv=False)
@@ -54,217 +53,124 @@ if __name__ == '__main__':
   except: rank = n
 
   # print input summary
-  print "Hilbert matrix dimension:        %8i" % n
-  print "Working precision:               %8.2e" % eps
-  print "Rank to working precision:       %8i" % rank
+  print("Hilbert matrix dimension:        {:8d}".format(n))
+  print("Working precision:               {:8.2e}".format(eps))
+  print("Rank to working precision:       {:8d}".format(rank))
 
   # set print format
-  fmt = "%8.2e (s) / %5s"
+  fmt = "{:8.2e} (s) / {:>5}"
+  check = lambda t, A, B, eps: print(fmt.format(t, str(np.allclose(A, B, eps))))
 
-  # test real ID routines
-  print "-----------------------------------------"
-  print "Real ID routines"
-  print "-----------------------------------------"
+  def test(desc, dz, A):
+    L = aslinearoperator(A)
 
-  # fixed precision
-  print "Calling iddp_id  ...",
-  t0 = time.clock()
-  k, idx, proj = pymatrixid.interp_decomp(A, eps, rand=False)
-  t = time.clock() - t0
-  B = pymatrixid.reconstruct_matrix_from_id(A[:,idx[:k]], idx, proj)
-  print fmt % (t, np.allclose(A, B, eps))
+    # test ID routines
+    print("-----------------------------------------")
+    print("{} ID routines".format(desc))
+    print("-----------------------------------------")
 
-  print "Calling iddp_aid ...",
-  t0 = time.clock()
-  k, idx, proj = pymatrixid.interp_decomp(A, eps)
-  t = time.clock() - t0
-  B = pymatrixid.reconstruct_matrix_from_id(A[:,idx[:k]], idx, proj)
-  print fmt % (t, np.allclose(A, B, eps))
+    # fixed precision
+    print("Calling id{}p_id  ...".format(dz), end=" ")
+    t0 = time.perf_counter()
+    k, idx, proj = pymatrixid.interp_decomp(A, eps, rand=False)
+    t = time.perf_counter() - t0
+    B = pymatrixid.reconstruct_matrix_from_id(A[:,idx[:k]], idx, proj)
+    check(t, A, B, eps)
 
-  print "Calling iddp_rid ...",
-  t0 = time.clock()
-  k, idx, proj = pymatrixid.interp_decomp(L, eps)
-  t = time.clock() - t0
-  B = pymatrixid.reconstruct_matrix_from_id(A[:,idx[:k]], idx, proj)
-  print fmt % (t, np.allclose(A, B, eps))
+    print("Calling id{}p_aid ...".format(dz), end=" ")
+    t0 = time.perf_counter()
+    k, idx, proj = pymatrixid.interp_decomp(A, eps)
+    t = time.perf_counter() - t0
+    B = pymatrixid.reconstruct_matrix_from_id(A[:,idx[:k]], idx, proj)
+    check(t, A, B, eps)
 
-  # fixed rank
-  k = rank
+    print("Calling id{}p_rid ...".format(dz), end=" ")
+    t0 = time.perf_counter()
+    k, idx, proj = pymatrixid.interp_decomp(L, eps)
+    t = time.perf_counter() - t0
+    B = pymatrixid.reconstruct_matrix_from_id(A[:,idx[:k]], idx, proj)
+    check(t, A, B, eps)
 
-  print "Calling iddr_id  ...",
-  t0 = time.clock()
-  idx, proj = pymatrixid.interp_decomp(A, k, rand=False)
-  t = time.clock() - t0
-  B = pymatrixid.reconstruct_matrix_from_id(A[:,idx[:k]], idx, proj)
-  print fmt % (t, np.allclose(A, B, eps))
+    # fixed rank
+    k = rank
 
-  print "Calling iddr_aid ...",
-  t0 = time.clock()
-  idx, proj = pymatrixid.interp_decomp(A, k)
-  t = time.clock() - t0
-  B = pymatrixid.reconstruct_matrix_from_id(A[:,idx[:k]], idx, proj)
-  print fmt % (t, np.allclose(A, B, eps))
+    print("Calling id{}r_id  ...".format(dz), end=" ")
+    t0 = time.perf_counter()
+    idx, proj = pymatrixid.interp_decomp(A, k, rand=False)
+    t = time.perf_counter() - t0
+    B = pymatrixid.reconstruct_matrix_from_id(A[:,idx[:k]], idx, proj)
+    check(t, A, B, eps)
 
-  print "Calling iddr_rid ...",
-  t0 = time.clock()
-  idx, proj = pymatrixid.interp_decomp(L, k)
-  t = time.clock() - t0
-  B = pymatrixid.reconstruct_matrix_from_id(A[:,idx[:k]], idx, proj)
-  print fmt % (t, np.allclose(A, B, eps))
+    print("Calling id{}r_aid ...".format(dz), end=" ")
+    t0 = time.perf_counter()
+    idx, proj = pymatrixid.interp_decomp(A, k)
+    t = time.perf_counter() - t0
+    B = pymatrixid.reconstruct_matrix_from_id(A[:,idx[:k]], idx, proj)
+    check(t, A, B, eps)
 
-  # test real SVD routines
-  print "-----------------------------------------"
-  print "Real SVD routines"
-  print "-----------------------------------------"
+    print("Calling id{}r_rid ...".format(dz), end=" ")
+    t0 = time.perf_counter()
+    idx, proj = pymatrixid.interp_decomp(L, k)
+    t = time.perf_counter() - t0
+    B = pymatrixid.reconstruct_matrix_from_id(A[:,idx[:k]], idx, proj)
+    check(t, A, B, eps)
 
-  # fixed precision
-  print "Calling iddp_svd ...",
-  t0 = time.clock()
-  U, S, V = pymatrixid.svd(A, eps, rand=False)
-  t = time.clock() - t0
-  B = np.dot(U, np.dot(np.diag(S), V.T))
-  print fmt % (t, np.allclose(A, B, eps))
+    # test SVD routines
+    print("-----------------------------------------")
+    print("{} SVD routines".format(desc))
+    print("-----------------------------------------")
 
-  print "Calling iddp_asvd...",
-  t0 = time.clock()
-  U, S, V = pymatrixid.svd(A, eps)
-  t = time.clock() - t0
-  B = np.dot(U, np.dot(np.diag(S), V.T))
-  print fmt % (t, np.allclose(A, B, eps))
+    # fixed precision
+    print("Calling id{}p_svd ...".format(dz), end=" ")
+    t0 = time.perf_counter()
+    U, S, V = pymatrixid.svd(A, eps, rand=False)
+    t = time.perf_counter() - t0
+    B = U @ np.diag(S) @ V.conj().T
+    check(t, A, B, eps)
 
-  print "Calling iddp_rsvd...",
-  t0 = time.clock()
-  U, S, V = pymatrixid.svd(L, eps)
-  t = time.clock() - t0
-  B = np.dot(U, np.dot(np.diag(S), V.T))
-  print fmt % (t, np.allclose(A, B, eps))
+    print("Calling id{}p_asvd...".format(dz), end=" ")
+    t0 = time.perf_counter()
+    U, S, V = pymatrixid.svd(A, eps)
+    t = time.perf_counter() - t0
+    B = U @ np.diag(S) @ V.conj().T
+    check(t, A, B, eps)
 
-  # fixed rank
-  k = rank
+    print("Calling id{}p_rsvd...".format(dz), end=" ")
+    t0 = time.perf_counter()
+    U, S, V = pymatrixid.svd(L, eps)
+    t = time.perf_counter() - t0
+    B = U @ np.diag(S) @ V.conj().T
+    check(t, A, B, eps)
 
-  print "Calling iddr_svd ...",
-  t0 = time.clock()
-  U, S, V = pymatrixid.svd(A, k, rand=False)
-  t = time.clock() - t0
-  B = np.dot(U, np.dot(np.diag(S), V.T))
-  print fmt % (t, np.allclose(A, B, eps))
+    # fixed rank
+    k = rank
 
-  print "Calling iddr_asvd...",
-  t0 = time.clock()
-  U, S, V = pymatrixid.svd(A, k)
-  t = time.clock() - t0
-  B = np.dot(U, np.dot(np.diag(S), V.T))
-  print fmt % (t, np.allclose(A, B, eps))
+    print("Calling id{}r_svd ...".format(dz), end=" ")
+    t0 = time.perf_counter()
+    U, S, V = pymatrixid.svd(A, k, rand=False)
+    t = time.perf_counter() - t0
+    B = U @ np.diag(S) @ V.conj().T
+    check(t, A, B, eps)
 
-  print "Calling iddr_rsvd...",
-  t0 = time.clock()
-  U, S, V = pymatrixid.svd(L, k)
-  t = time.clock() - t0
-  B = np.dot(U, np.dot(np.diag(S), V.T))
-  print fmt % (t, np.allclose(A, B, eps))
+    print("Calling id{}r_asvd...".format(dz), end=" ")
+    t0 = time.perf_counter()
+    U, S, V = pymatrixid.svd(A, k)
+    t = time.perf_counter() - t0
+    B = U @ np.diag(S) @ V.conj().T
+    check(t, A, B, eps)
+
+    print("Calling id{}r_rsvd...".format(dz), end=" ")
+    t0 = time.perf_counter()
+    U, S, V = pymatrixid.svd(L, k)
+    t = time.perf_counter() - t0
+    B = U @ np.diag(S) @ V.conj().T
+    check(t, A, B, eps)
+
+  # test real routines
+  test("Real", "d", A)
 
   # complexify Hilbert matrix
   A = A*(1 + 1j)
-  L = aslinearoperator(A)
 
-  # test complex ID routines
-  print "-----------------------------------------"
-  print "Complex ID routines"
-  print "-----------------------------------------"
-
-  # fixed precision
-  print "Calling idzp_id  ...",
-  t0 = time.clock()
-  k, idx, proj = pymatrixid.interp_decomp(A, eps, rand=False)
-  t = time.clock() - t0
-  B = pymatrixid.reconstruct_matrix_from_id(A[:,idx[:k]], idx, proj)
-  print fmt % (t, np.allclose(A, B, eps))
-
-  print "Calling idzp_aid ...",
-  t0 = time.clock()
-  k, idx, proj = pymatrixid.interp_decomp(A, eps)
-  t = time.clock() - t0
-  B = pymatrixid.reconstruct_matrix_from_id(A[:,idx[:k]], idx, proj)
-  print fmt % (t, np.allclose(A, B, eps))
-
-  print "Calling idzp_rid ...",
-  t0 = time.clock()
-  k, idx, proj = pymatrixid.interp_decomp(L, eps)
-  t = time.clock() - t0
-  B = pymatrixid.reconstruct_matrix_from_id(A[:,idx[:k]], idx, proj)
-  print fmt % (t, np.allclose(A, B, eps))
-
-  # fixed rank
-  k = rank
-
-  print "Calling idzr_id  ...",
-  t0 = time.clock()
-  idx, proj = pymatrixid.interp_decomp(A, k, rand=False)
-  t = time.clock() - t0
-  B = pymatrixid.reconstruct_matrix_from_id(A[:,idx[:k]], idx, proj)
-  print fmt % (t, np.allclose(A, B, eps))
-
-  print "Calling idzr_aid ...",
-  t0 = time.clock()
-  idx, proj = pymatrixid.interp_decomp(A, k)
-  t = time.clock() - t0
-  B = pymatrixid.reconstruct_matrix_from_id(A[:,idx[:k]], idx, proj)
-  print fmt % (t, np.allclose(A, B, eps))
-
-  print "Calling idzr_rid ...",
-  t0 = time.clock()
-  idx, proj = pymatrixid.interp_decomp(L, k)
-  t = time.clock() - t0
-  B = pymatrixid.reconstruct_matrix_from_id(A[:,idx[:k]], idx, proj)
-  print fmt % (t, np.allclose(A, B, eps))
-
-  # test complex SVD routines
-  print "-----------------------------------------"
-  print "Complex SVD routines"
-  print "-----------------------------------------"
-
-  # fixed precision
-  print "Calling idzp_svd ...",
-  t0 = time.clock()
-  U, S, V = pymatrixid.svd(A, eps, rand=False)
-  t = time.clock() - t0
-  B = np.dot(U, np.dot(np.diag(S), V.conj().T))
-  print fmt % (t, np.allclose(A, B, eps))
-
-  print "Calling idzp_asvd...",
-  t0 = time.clock()
-  U, S, V = pymatrixid.svd(A, eps)
-  t = time.clock() - t0
-  B = np.dot(U, np.dot(np.diag(S), V.conj().T))
-  print fmt % (t, np.allclose(A, B, eps))
-
-  print "Calling idzp_rsvd...",
-  t0 = time.clock()
-  U, S, V = pymatrixid.svd(L, eps)
-  t = time.clock() - t0
-  B = np.dot(U, np.dot(np.diag(S), V.conj().T))
-  print fmt % (t, np.allclose(A, B, eps))
-
-  # fixed rank
-  k = rank
-
-  print "Calling idzr_svd ...",
-  t0 = time.clock()
-  U, S, V = pymatrixid.svd(A, k, rand=False)
-  t = time.clock() - t0
-  B = np.dot(U, np.dot(np.diag(S), V.conj().T))
-  print fmt % (t, np.allclose(A, B, eps))
-
-  print "Calling idzr_asvd...",
-  t0 = time.clock()
-  U, S, V = pymatrixid.svd(A, k)
-  t = time.clock() - t0
-  B = np.dot(U, np.dot(np.diag(S), V.conj().T))
-  print fmt % (t, np.allclose(A, B, eps))
-
-  print "Calling idzr_rsvd...",
-  t0 = time.clock()
-  U, S, V = pymatrixid.svd(L, k)
-  t = time.clock() - t0
-  B = np.dot(U, np.dot(np.diag(S), V.conj().T))
-  print fmt % (t, np.allclose(A, B, eps))
+  # test complex routines
+  test("Complex", "z", A)
