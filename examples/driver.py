@@ -57,11 +57,13 @@ if __name__ == '__main__':
   print("Working precision:               {:8.2e}".format(eps))
   print("Rank to working precision:       {:8d}".format(rank))
 
-  # set print format
-  fmt = "{:8.2e} (s) / {:>5}"
-  check = lambda t, A, B, eps: print(fmt.format(t, str(np.allclose(A, B, eps))))
+  # convenience function to summarize each sub-test
+  def summarize(t, A, B):
+    print("{:8.2e} (s) / {:>5}".format(t, str(np.allclose(A, B, eps))))
 
+  # convenience function to perform tests for a given type
   def test(desc, dz, A):
+    desc = desc.capitalize()
     L = aslinearoperator(A)
 
     # test ID routines
@@ -75,21 +77,21 @@ if __name__ == '__main__':
     k, idx, proj = pymatrixid.interp_decomp(A, eps, rand=False)
     t = time.perf_counter() - t0
     B = pymatrixid.reconstruct_matrix_from_id(A[:,idx[:k]], idx, proj)
-    check(t, A, B, eps)
+    summarize(t, A, B)
 
     print("Calling id{}p_aid ...".format(dz), end=" ")
     t0 = time.perf_counter()
     k, idx, proj = pymatrixid.interp_decomp(A, eps)
     t = time.perf_counter() - t0
     B = pymatrixid.reconstruct_matrix_from_id(A[:,idx[:k]], idx, proj)
-    check(t, A, B, eps)
+    summarize(t, A, B)
 
     print("Calling id{}p_rid ...".format(dz), end=" ")
     t0 = time.perf_counter()
     k, idx, proj = pymatrixid.interp_decomp(L, eps)
     t = time.perf_counter() - t0
     B = pymatrixid.reconstruct_matrix_from_id(A[:,idx[:k]], idx, proj)
-    check(t, A, B, eps)
+    summarize(t, A, B)
 
     # fixed rank
     k = rank
@@ -99,21 +101,21 @@ if __name__ == '__main__':
     idx, proj = pymatrixid.interp_decomp(A, k, rand=False)
     t = time.perf_counter() - t0
     B = pymatrixid.reconstruct_matrix_from_id(A[:,idx[:k]], idx, proj)
-    check(t, A, B, eps)
+    summarize(t, A, B)
 
     print("Calling id{}r_aid ...".format(dz), end=" ")
     t0 = time.perf_counter()
     idx, proj = pymatrixid.interp_decomp(A, k)
     t = time.perf_counter() - t0
     B = pymatrixid.reconstruct_matrix_from_id(A[:,idx[:k]], idx, proj)
-    check(t, A, B, eps)
+    summarize(t, A, B)
 
     print("Calling id{}r_rid ...".format(dz), end=" ")
     t0 = time.perf_counter()
     idx, proj = pymatrixid.interp_decomp(L, k)
     t = time.perf_counter() - t0
     B = pymatrixid.reconstruct_matrix_from_id(A[:,idx[:k]], idx, proj)
-    check(t, A, B, eps)
+    summarize(t, A, B)
 
     # test SVD routines
     print("-----------------------------------------")
@@ -126,21 +128,21 @@ if __name__ == '__main__':
     U, S, V = pymatrixid.svd(A, eps, rand=False)
     t = time.perf_counter() - t0
     B = U @ np.diag(S) @ V.conj().T
-    check(t, A, B, eps)
+    summarize(t, A, B)
 
     print("Calling id{}p_asvd...".format(dz), end=" ")
     t0 = time.perf_counter()
     U, S, V = pymatrixid.svd(A, eps)
     t = time.perf_counter() - t0
     B = U @ np.diag(S) @ V.conj().T
-    check(t, A, B, eps)
+    summarize(t, A, B)
 
     print("Calling id{}p_rsvd...".format(dz), end=" ")
     t0 = time.perf_counter()
     U, S, V = pymatrixid.svd(L, eps)
     t = time.perf_counter() - t0
     B = U @ np.diag(S) @ V.conj().T
-    check(t, A, B, eps)
+    summarize(t, A, B)
 
     # fixed rank
     k = rank
@@ -150,27 +152,27 @@ if __name__ == '__main__':
     U, S, V = pymatrixid.svd(A, k, rand=False)
     t = time.perf_counter() - t0
     B = U @ np.diag(S) @ V.conj().T
-    check(t, A, B, eps)
+    summarize(t, A, B)
 
     print("Calling id{}r_asvd...".format(dz), end=" ")
     t0 = time.perf_counter()
     U, S, V = pymatrixid.svd(A, k)
     t = time.perf_counter() - t0
     B = U @ np.diag(S) @ V.conj().T
-    check(t, A, B, eps)
+    summarize(t, A, B)
 
     print("Calling id{}r_rsvd...".format(dz), end=" ")
     t0 = time.perf_counter()
     U, S, V = pymatrixid.svd(L, k)
     t = time.perf_counter() - t0
     B = U @ np.diag(S) @ V.conj().T
-    check(t, A, B, eps)
+    summarize(t, A, B)
 
   # test real routines
-  test("Real", "d", A)
+  test("real", "d", A)
 
   # complexify Hilbert matrix
   A = A*(1 + 1j)
 
   # test complex routines
-  test("Complex", "z", A)
+  test("complex", "z", A)

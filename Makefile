@@ -13,7 +13,7 @@ ID_DIR   = external/$(ID_LIB)
 ID_SRC   = $(ID_DIR)/src
 
 F2PY_EXT = $(shell python3-config --extension-suffix)
-ID_PYSO  = $(ID_LIB)$(F2PY_EXT)
+ID_PYLIB = $(ID_LIB)$(F2PY_EXT)
 
 vpath %.pyf $(SRC)
 vpath %.so  $(PYTHON)
@@ -22,12 +22,12 @@ vpath %.so  $(PYTHON)
 
 all: python
 
-$(ID_PYSO): $(ID_LIB).pyf
+$(ID_PYLIB): $(ID_LIB).pyf
 	$(F2PY) -c $< $(F2PYFLAGS) $(ID_SRC)/*.f
-	mv $(ID_PYSO) $(BIN)
-	cd $(PYTHON) ; ln -fs ../$(BIN)/$(ID_PYSO)
+	mv $(ID_PYLIB) $(BIN)
+	cd $(PYTHON) ; ln -fs ../$(BIN)/$(ID_PYLIB)
 
-python: $(ID_PYSO)
+python: $(ID_PYLIB)
 
 id_dist:
 	cd $(ID_DIR) ; make
@@ -41,8 +41,8 @@ driver: python
 clean: clean_python clean_id_dist clean_doc clean_driver
 
 clean_python:
-	cd $(BIN) ; rm -f $(ID_PYSO)
-	cd $(PYTHON) ; rm -f $(ID_PYSO)
+	cd $(BIN) ; rm -f $(ID_PYLIB)
+	cd $(PYTHON) ; rm -f $(ID_PYLIB)
 	cd $(PYTHON)/$(LIB) ; rm -f __init__.pyc backend.pyc
 
 clean_id_dist:
