@@ -43,7 +43,7 @@ clean: clean_python clean_id_dist clean_doc clean_driver
 clean_python:
 	cd $(BIN) ; rm -f $(ID_PYLIB)
 	cd $(PYTHON) ; rm -f $(ID_PYLIB)
-	cd $(PYTHON)/$(LIB) ; rm -f __init__.pyc backend.pyc
+	cd $(PYTHON)/$(LIB) ; rm -rf __pycache__
 
 clean_id_dist:
 	cd $(ID_DIR) ; make clean
@@ -52,7 +52,7 @@ clean_doc:
 	cd $(DOC) ; make clean
 
 clean_driver:
-	cd $(DOC) ; rm -f driver.pyc
+	cd $(EXAMPLES) ;
 
 rebuild: clean all
 
